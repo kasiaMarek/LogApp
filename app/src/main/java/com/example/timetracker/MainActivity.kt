@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.util.Log
 import android.view.View
-import com.example.timetracker.jiraservice.JiraService
-import com.example.timetracker.jiraservice.Tasks
-import com.example.timetracker.jiraservice.User
+import com.example.timetracker.jiraservice.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,6 +37,8 @@ class MainActivity : AppCompatActivity() {
                     val body = response.body()
                     jiraService.name = body!!.displayName
                     getTastks()
+                    getWorklogs()
+                    addWorklog()
                 } else {
                     Log.d("Log", "Wrong auth")
                 }
@@ -59,6 +59,67 @@ class MainActivity : AppCompatActivity() {
                 if(response.isSuccessful) {
                     val body = response.body()
                     Log.d("Log", "issue:" + body!!.issues[0].fields.summary)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
+    fun getWorklogs() {
+        val call = jiraService.getWorklog("10003")
+        call.enqueue(object : Callback<Worklogs> {
+
+            override fun onFailure(call: Call<Worklogs>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.worklogs[0].started)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
+    fun addWorklog() {
+        val call = jiraService.addWorklog("10003", WorklogTime( "300"))
+        call.enqueue(object : Callback<Worklog> {
+
+            override fun onFailure(call: Call<Worklog>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.started)
+                    updateWorklog(body!!.id)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
+    fun updateWorklog(id : String) {
+        val call = jiraService.updateWorklog("10003", id, WorklogTime( "600"))
+        call.enqueue(object : Callback<Worklog> {
+
+            override fun onFailure(call: Call<Worklog>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.started)
                 } else {
                     Log.d("Log", "Wrong auth")
                 }

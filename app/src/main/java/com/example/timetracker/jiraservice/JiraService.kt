@@ -19,6 +19,17 @@ interface JiraApi {
     @GET("search")
     fun tasks(@Header("Authorization") token : String, @Query("assignee") assignee : String) : Call<Tasks>
 
+    @Headers("Content-Type: application/json")
+    @GET("issue/{issue}/worklog")
+    fun getWorklog(@Header("Authorization") token : String, @Path("issue") issue : String) : Call<Worklogs>
+
+    @Headers("Content-Type: application/json")
+    @POST("issue/{issue}/worklog")
+    fun addWorklog(@Header("Authorization") token : String, @Path("issue") issue : String, @Body worklogData : WorklogTime) : Call<Worklog>
+
+    @Headers("Content-Type: application/json")
+    @POST("issue/{issue}/worklog/{worklog}")
+    fun updateWorklog(@Header("Authorization") token : String, @Path("issue") issue : String, @Path("worklog") worklog : String, @Body worklogData : WorklogTime) : Call<Worklog>
 }
 
 class JiraService(login : String, token : String) {
@@ -37,6 +48,18 @@ class JiraService(login : String, token : String) {
     fun getTasks() : Call<Tasks>? {
         return if (name != null) jira.tasks(auth, name!!) else null
     }
+
+    fun getWorklog(issue : String) : Call<Worklogs> {
+        return jira.getWorklog(auth, issue)
+    }
+
+    fun addWorklog(issue : String, worklogData : WorklogTime) : Call<Worklog> {
+        return jira.addWorklog(auth, issue, worklogData)
+    }
+
+    fun updateWorklog(issue : String, worklog: String, worklogData : WorklogTime) : Call<Worklog> {
+        return jira.updateWorklog(auth, issue, worklog, worklogData)
+    }
 }
 
 object JiraServiceKeeper {
@@ -52,3 +75,6 @@ data class User(val displayName:String)
 data class Tasks(val total : Int, val issues : List<Issue>)
 data class Issue(val id : String, val key : String, val fields : Fields)
 data class Fields(val summary : String, val description : String?)
+data class Worklogs(val total : Int, val worklogs : List<Worklog>)
+data class Worklog(val id : String, val started : String, val timeSpentSeconds : String, val author : User)
+data class WorklogTime(val timeSpentSeconds : String)
