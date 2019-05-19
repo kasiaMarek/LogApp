@@ -28,14 +28,14 @@ interface JiraApi {
     fun addWorklog(@Header("Authorization") token : String, @Path("issue") issue : String, @Body worklogData : WorklogTime) : Call<Worklog>
 
     @Headers("Content-Type: application/json")
-    @POST("issue/{issue}/worklog/{worklog}")
+    @PUT("issue/{issue}/worklog/{worklog}")
     fun updateWorklog(@Header("Authorization") token : String, @Path("issue") issue : String, @Path("worklog") worklog : String, @Body worklogData : WorklogTime) : Call<Worklog>
 }
 
 class JiraService(login : String, token : String) {
     val auth = "Basic " + Base64.encodeToString(("$login:$token").toByteArray(), Base64.NO_WRAP)
     val retrofit = Retrofit.Builder()
-        .baseUrl("https://logapp.atlassian.net/rest/api/2/")
+        .baseUrl("https://logapp.atlassian.net/rest/api/3/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val jira = retrofit.create(JiraApi::class.java)

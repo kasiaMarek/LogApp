@@ -109,7 +109,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateWorklog(id : String) {
-        val call = jiraService.updateWorklog("10003", id, WorklogTime( "600"))
+        val call = jiraService.updateWorklog("10003", id, WorklogTime("600"))
+
         call.enqueue(object : Callback<Worklog> {
 
             override fun onFailure(call: Call<Worklog>, t: Throwable) {
