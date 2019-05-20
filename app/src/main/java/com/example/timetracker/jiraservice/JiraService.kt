@@ -1,11 +1,8 @@
 package com.example.timetracker.jiraservice
 
 import android.util.Base64
-import android.util.Log
-
+import android.webkit.URLUtil
 import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -21,10 +18,10 @@ interface JiraApi {
 
 }
 
-class JiraService(login : String, token : String) {
+class JiraService(login : String, token : String, url : String) {
     val auth = "Basic " + Base64.encodeToString(("$login:$token").toByteArray(), Base64.NO_WRAP)
     val retrofit = Retrofit.Builder()
-        .baseUrl("https://logapp.atlassian.net/rest/api/2/")
+        .baseUrl(url)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val jira = retrofit.create(JiraApi::class.java)
@@ -40,10 +37,15 @@ class JiraService(login : String, token : String) {
 }
 
 object JiraServiceKeeper {
-    var jira : JiraService? = null
+    lateinit var jira : JiraService
 
-    fun initJira(login : String, token : String) {
-        jira = JiraService(login, token)
+    fun initJira(login : String, token : String, projectName : String): Boolean {
+        val url = "https://$projectName.atlassian.net/rest/api/3/"
+        if(URLUtil.isValidUrl(url)) {
+            jira = JiraService(login, token, url)
+            return true
+        }
+        return false
     }
 }
 
