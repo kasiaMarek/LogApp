@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp">
+
+    <com.github.vipulasri.timelineview.TimelineView
+            android:id="@+id/timeline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:markerSize="20dp"
+            app:lineWidth="3dp"
+            app:startLineColor="@color/colorAccent"
+            app:endLineColor="@color/colorAccent"
+            app:lineStyle="dash"/>
+
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/timeline_item_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            app:cardBackgroundColor="@color/colorGrey50"
+            app:contentPadding="15dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/timeline_item_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:paddingRight="16dp"
+                    android:id="@+id/timeline_item_id"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintLeft_toLeftOf="@+id/timeline_item_row"
+                    app:layout_constraintTop_toTopOf="@id/timeline_item_row"
+                    app:layout_constraintBottom_toBottomOf="@id/timeline_item_row"
+                    tools:text="ABC-123"
+            />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/timeline_item_time_spent"
+                    android:textColor="@android:color/black"
+                    android:paddingLeft="10dp"
+                    app:layout_constraintRight_toRightOf="@id/timeline_item_row"
+                    app:layout_constraintTop_toTopOf="@id/timeline_item_row"
+                    app:layout_constraintBottom_toBottomOf="@id/timeline_item_row"
+                    tools:text="2h"
+            />
+
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/timeline_item_row_linear"
+                    app:layout_constraintTop_toTopOf="@id/timeline_item_row"
+                    app:layout_constraintBottom_toBottomOf="@id/timeline_item_row"
+                    app:layout_constraintRight_toLeftOf="@id/timeline_item_time_spent"
+                    app:layout_constraintLeft_toRightOf="@id/timeline_item_id"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/timeline_item_title"
+                        android:textColor="@android:color/black"
+                        tools:text="Order Successfully Completed long long"/>
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/timeline_item_date"
+                        android:textSize="12sp"
+                        tools:text="24 JAN"/>
+
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
