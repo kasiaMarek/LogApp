@@ -2,10 +2,6 @@ package com.example.timetracker
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-
 
 const val PREFS_FILENAME = "com.timetracker"
 const val PASS = "password"
