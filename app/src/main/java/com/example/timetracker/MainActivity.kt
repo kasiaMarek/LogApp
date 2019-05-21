@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-const val errorMessageText = "Provided credentials are invalid. Please try again."
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var storage : Storage
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     Log.d("Log", t.message)
-                    if (!saved) errorMessage.text = errorMessageText
+                    if (!saved) errorMessage.text = getString(R.string.invalid_cred_error_msg)
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
@@ -53,12 +53,12 @@ class MainActivity : AppCompatActivity() {
                         // TODO:: go to task screen
                         Log.d("Log", "you're successfully logged in")
                     } else {
-                        if (!saved) errorMessage.text = errorMessageText
+                        if (!saved) errorMessage.text = getString(R.string.invalid_cred_error_msg)
                     }
                 }
             })
         } else {
-            if(!saved) errorMessage.text = errorMessageText
+            if(!saved) errorMessage.text = getString(R.string.invalid_cred_error_msg)
         }
 
     }
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 false
             )
         } else {
-            errorMessage.text = "$projectName is not a valid project name"
+            errorMessage.text = getString(R.string.invalid_project_error_msg)
         }
 
     }

@@ -8,23 +8,32 @@ import com.squareup.moshi.Types
 
 
 const val PREFS_FILENAME = "com.timetracker"
-const val TODOS_DATA_FIELD = "credentials"
+const val PASS = "password"
+const val MAIL = "mail"
+const val PROJECT = "project"
 class Storage (context: Context) {
-    private val moshi: Moshi = Moshi.Builder().build()
-    private val type = Types.newParameterizedType(Credentials::class.java)!!
-    private val adapter: JsonAdapter<Credentials> = moshi.adapter(type)
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
-    private var credentials: String
-        get() = prefs.getString(TODOS_DATA_FIELD, adapter.toJson(Credentials(null, null, null)))!!
-        set(value) = prefs.edit().putString(TODOS_DATA_FIELD, value).apply()
+    private var password: String?
+        get() = prefs.getString(PASS, null)
+        set(value) = prefs.edit().putString(PASS, value).apply()
+
+    private var mail: String?
+        get() = prefs.getString(MAIL, null)
+        set(value) = prefs.edit().putString(MAIL, value).apply()
+
+    private var project: String?
+        get() = prefs.getString(PROJECT, null)
+        set(value) = prefs.edit().putString(PROJECT, value).apply()
 
     fun writeCredentials(credentials: Credentials) {
-        this.credentials = adapter.toJson(credentials)
+        this.password = credentials.token
+        this.mail = credentials.login
+        this.project = credentials.projectName
     }
 
     fun getCredentials() : Credentials {
-        return adapter.fromJson(credentials)!!
+        return Credentials(mail, password, project)
     }
 }
 
