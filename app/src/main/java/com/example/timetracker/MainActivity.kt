@@ -4,8 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.example.timetracker.jiraservice.JiraServiceKeeper
-import com.example.timetracker.jiraservice.User
+import com.example.timetracker.jiraservice.*
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -84,8 +83,28 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun getTastks() {
+        val call = JiraServiceKeeper.jira.getTasks()!!
+        call.enqueue(object : Callback<Tasks> {
+
+            override fun onFailure(call: Call<Tasks>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.issues[0].fields.summary)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
     fun getWorklogs() {
-        val call = jiraService.getWorklog("10003")
+        val call = JiraServiceKeeper.jira.getWorklog("10003")
         call.enqueue(object : Callback<Worklogs> {
 
             override fun onFailure(call: Call<Worklogs>, t: Throwable) {
@@ -105,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addWorklog() {
-        val call = jiraService.addWorklog("10003", WorklogTime( "300"))
+        val call = JiraServiceKeeper.jira.addWorklog("10003", WorklogTime( "300"))
         call.enqueue(object : Callback<Worklog> {
 
             override fun onFailure(call: Call<Worklog>, t: Throwable) {
@@ -126,7 +145,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateWorklog(id : String) {
-        val call = jiraService.updateWorklog("10003", id, WorklogTime("600"))
+        val call = JiraServiceKeeper.jira.updateWorklog("10003", id, WorklogTime("600"))
 
         call.enqueue(object : Callback<Worklog> {
 
