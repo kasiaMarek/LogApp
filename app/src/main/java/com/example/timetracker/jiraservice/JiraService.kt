@@ -76,7 +76,7 @@ data class User(val displayName:String)
 
 data class Tasks(val total : Int, val issues : List<Issue>)
 data class Issue(val id : String, val key : String, val fields : Fields)
-data class Fields(val summary : String, val description : String?)
+data class Fields(val summary : String, val description : String?, val timespent : String?, val created : String?)
 data class Worklogs(val total : Int, val worklogs : List<Worklog>)
 data class Worklog(val id : String, val started : String, val timeSpentSeconds : String, val author : User)
 data class WorklogTime(val timeSpentSeconds : String)

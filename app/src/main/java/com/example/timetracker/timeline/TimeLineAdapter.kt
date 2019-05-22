@@ -1,5 +1,6 @@
 package com.example.timetracker.timeline
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,12 @@ import com.example.timetracker.model.TimelineAttributes
 import com.example.timetracker.utils.DateTimeUtils
 import com.example.timetracker.utils.VectorDrawableUtils
 import com.example.timetracker.R
+import com.example.timetracker.jiraservice.JiraServiceKeeper
+import com.example.timetracker.jiraservice.Worklog
+import com.example.timetracker.jiraservice.WorklogTime
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class TimeLineAdapter(private val task_list: ArrayList<Task>, private var mAttributes: TimelineAttributes) : RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
@@ -103,29 +110,30 @@ class TimeLineAdapter(private val task_list: ArrayList<Task>, private var mAttri
                     val hour_picker = theView.findViewById(R.id.hour_picker) as NumberPicker
                     val minutes_picker = theView.findViewById(R.id.minutes_picker) as NumberPicker
 
-                    builder.setView(theView)                    // get the values from pickers and assign to item view
-                        .setPositiveButton("Accept"
-                        ) { dialog, which ->
-                            var new_value = ""
+                    hour_picker.value = Integer.parseInt(itemView.timeline_item_time_spent.text.toString())/3600
+                    minutes_picker.value = (Integer.parseInt(itemView.timeline_item_time_spent.text.toString())%3600)/(60)
 
-                            if(hour_picker.value == 0){
-                                if(minutes_picker.value != 0 ){
-                                    new_value = minutes_picker.value.toString() + "min"
-                                }
-                            }else{
-                                if(minutes_picker.value == 0 ){
-                                    new_value = hour_picker.value.toString() + "h"
-                                }else{
-                                    new_value = hour_picker.value.toString() + "h " + minutes_picker.value.toString() + "min"
-                                }
+                    builder.setView(theView).setPositiveButton("Accept") { dialog, which ->
+                        var new_value = ""
+
+                        if(hour_picker.value == 0){
+                            if(minutes_picker.value != 0 ){
+                                new_value = minutes_picker.value.toString() + "min"
                             }
+                        }else{
+                            if(minutes_picker.value == 0 ){
+                                new_value = hour_picker.value.toString() + "h"
+                            }else{
+                                new_value = hour_picker.value.toString() + "h " + minutes_picker.value.toString() + "min"
+                            }
+                        }
 
-                            itemView.timeline_item_time_spent.text = new_value
+                        itemView.timeline_item_time_spent.text = new_value
 
-                            //todo: send new values to jira?
+                        //todo: send new values to jira?
+                        Log.d("TEST ASD", itemView.timeline_item_time_spent.text.toString())
 
-                        }.setNegativeButton("Reject"
-                        ) { dialog, which -> }
+                    }.setNegativeButton("Reject") { dialog, which -> }
 
                     hour_picker.minValue = 0
                     hour_picker.maxValue = 12
@@ -141,11 +149,26 @@ class TimeLineAdapter(private val task_list: ArrayList<Task>, private var mAttri
             }
 
         }
-
-
-
-
-
     }
 
+    fun updateWorklog(issue : String, id : String, time : String) {
+        val call = JiraServiceKeeper.jira.updateWorklog(issue, id, WorklogTime(time))
+
+        call.enqueue(object : Callback<Worklog> {
+
+            override fun onFailure(call: Call<Worklog>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.started)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
 }

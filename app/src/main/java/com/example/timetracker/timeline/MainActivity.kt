@@ -2,6 +2,7 @@ package com.example.timetracker.timeline
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,8 +11,16 @@ import com.example.timetracker.model.Task
 import com.example.timetracker.model.TimelineAttributes
 import com.example.timetracker.utils.Utils
 import com.example.timetracker.R
+import com.example.timetracker.jiraservice.Issue
+import com.example.timetracker.jiraservice.JiraServiceKeeper
+import com.example.timetracker.jiraservice.Tasks
+import com.example.timetracker.jiraservice.Worklogs
+import com.example.timetracker.utils.DateTimeUtils
 import com.github.vipulasri.timelineview.TimelineView
 import kotlinx.android.synthetic.main.timeline_main_activity.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.ArrayList
 
 class MainActivity : BaseActivity() {
@@ -41,8 +50,7 @@ class MainActivity : BaseActivity() {
             lineDashGap = Utils.dpToPx(2f, this)
         )
 
-        setDataListItems()
-        initRecyclerView()
+        getTastks()
 
         timeline_refresh_button.setOnClickListener {refresh()}
 
@@ -50,22 +58,51 @@ class MainActivity : BaseActivity() {
 
     //todo: delete, just to check if adapter works
     fun refresh(){
-        task_list.add(Task("DLK-3551","Order placed successfully", "2017-02-10 14:00", "21:00","0.333h", "done"))
+        task_list.clear()
+        getTastks()
         timeline_adapter.notifyDataSetChanged()
     }
 
-    private fun setDataListItems() {
 
-        task_list.add(Task("ABC-123","Item successfully delivered", "","19:00","1h", "started"))
-        task_list.add(Task("ZZZ -22","Courier is out to delivery your order", "2017-02-12 08:00", "9:07","1h", "started"))
-        task_list.add(Task("DD","Item has reached courier facility at New Delhi", "2017-02-11 21:00","9:00","5h",  "started"))
-        task_list.add(Task("OAO-2323","Item has been given to the courier", "2017-02-11 18:00","9:00","3h",  "done"))
-        task_list.add(Task("666","Item is packed and will dispatch soon", "2017-02-11 09:30","19:00","0.5h",  "other"))
-        task_list.add(Task("ADSD","Order is being readied for dispatch", "2017-02-11 08:00", "9:00","2h", "started"))
-        task_list.add(Task("AMA","Order processing initiated", "2017-02-10 15:00","9:00","1h",  "done"))
-        task_list.add(Task("KAJKO-2691","Order confirmed by seller", "2017-02-10 14:30","01:00","1h",  "started"))
-        task_list.add(Task("DLK-3551","Order placed successfully", "2017-02-10 14:00", "21:00","0.333h", "done"))
+    fun getTastks() {
+        val call = JiraServiceKeeper.jira.getTasks()!!
+        call.enqueue(object : Callback<Tasks> {
 
+            override fun onFailure(call: Call<Tasks>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    body!!.issues.forEach { getWorklogs(it) }
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
+    fun getWorklogs(task : Issue) {
+        val call = JiraServiceKeeper.jira.getWorklog(task.key)
+        call.enqueue(object : Callback<Worklogs> {
+
+            override fun onFailure(call: Call<Worklogs>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    body!!.worklogs.forEach {task_list.add(Task(task.key, task.fields.summary, it.started,"9:00", it.timeSpentSeconds,  "started")) }
+                    initRecyclerView()
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
     }
 
     private fun initRecyclerView() {

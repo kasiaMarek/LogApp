@@ -9,6 +9,13 @@ import java.util.Locale
 
 
 object DateTimeUtils {
+    fun parseSeconds(time : String) : String{
+        return parseSeconds(Integer.parseInt(time))
+    }
+
+    fun parseSeconds(time : Int) : String {
+        return Math.abs(time/60*60).toString() + "h"
+    }
 
     fun parseDateTime(dateString: String, originalFormat: String, outputFromat: String): String {
 
