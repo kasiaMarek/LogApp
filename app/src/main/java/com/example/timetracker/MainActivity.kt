@@ -51,6 +51,9 @@ class MainActivity : AppCompatActivity() {
                         }
                         errorMessage.text = ""
                         // TODO:: go to task screen
+                        getTastks()
+                        getWorklogs()
+                        addWorklog()
                         Log.d("Log", "you're successfully logged in")
                     } else {
                         if (!saved) errorMessage.text = getString(R.string.invalid_cred_error_msg)
@@ -81,4 +84,65 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun getWorklogs() {
+        val call = jiraService.getWorklog("10003")
+        call.enqueue(object : Callback<Worklogs> {
+
+            override fun onFailure(call: Call<Worklogs>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.worklogs[0].started)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
+    fun addWorklog() {
+        val call = jiraService.addWorklog("10003", WorklogTime( "300"))
+        call.enqueue(object : Callback<Worklog> {
+
+            override fun onFailure(call: Call<Worklog>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.started)
+                    updateWorklog(body!!.id)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
+    fun updateWorklog(id : String) {
+        val call = jiraService.updateWorklog("10003", id, WorklogTime("600"))
+
+        call.enqueue(object : Callback<Worklog> {
+
+            override fun onFailure(call: Call<Worklog>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Log", "issue:" + body!!.started)
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
 }
