@@ -15,6 +15,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".timeline.MainActivity"></activity>
+        <activity android:name=".tasklogger.MainActivity"></activity>
+        <activity android:name=".test_main.MainActivity"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -1,9 +1,10 @@
 package com.example.timetracker
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.example.timetracker.jiraservice.*
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -49,11 +50,16 @@ class MainActivity : AppCompatActivity() {
                             storage.writeCredentials(credentials)
                         }
                         errorMessage.text = ""
-                        // TODO:: go to task screen
+
                         getTastks()
                         getWorklogs()
                         addWorklog()
                         Log.d("Log", "you're successfully logged in")
+                        // TODO:: go to task screen
+
+                        val i = Intent(baseContext, com.example.timetracker.test_main.MainActivity::class.java)
+                        startActivity(i)
+
                     } else {
                         if (!saved) errorMessage.text = getString(R.string.invalid_cred_error_msg)
                     }
