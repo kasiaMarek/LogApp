@@ -33,7 +33,8 @@ tools:context=".LoginActivity">
         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
         android:id="@+id/input_token" app:hintEnabled="true" app:hintAnimationEnabled="true"
         android:hint="token"
-        android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/button">
+        android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/button"
+        style="@style/Base.Widget.MaterialComponents.TextInputLayout">
 
     <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -48,7 +49,8 @@ tools:context=".LoginActivity">
         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/input_token"
         android:id="@+id/input_login"
-        android:hint="login" app:hintAnimationEnabled="true" app:hintEnabled="true">
+        android:hint="login" app:hintAnimationEnabled="true" app:hintEnabled="true"
+        style="@style/Base.Widget.MaterialComponents.TextInputLayout">
 
     <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -56,21 +58,20 @@ tools:context=".LoginActivity">
             android:text="maciekstosio@icloud.com"
     />
 </com.google.android.material.textfield.TextInputLayout>
-<com.google.android.material.textfield.TextInputLayout
-        android:layout_width="395dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/input_login" app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="8dp" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/input_project" android:hint="project" app:hintEnabled="true"
-        app:hintAnimationEnabled="true" android:background="@color/white">
-
-    <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="395dp"
             android:layout_height="wrap_content"
-            android:text="logapp"
-    />
-</com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/input_login" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/input_project" android:hint="project" app:hintEnabled="true"
+            app:hintAnimationEnabled="true" style="@style/Base.Widget.MaterialComponents.TextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="logapp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -78,7 +79,8 @@ tools:context=".LoginActivity">
         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
         android:textAlignment="textStart" android:textSize="14sp" android:textColor="@android:color/holo_red_dark"
         app:layout_constraintHorizontal_bias="0.0" android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/input_project" android:background="@color/white"/>
+        app:layout_constraintBottom_toTopOf="@+id/input_project"
+        style="@style/Base.Widget.AppCompat.TextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
