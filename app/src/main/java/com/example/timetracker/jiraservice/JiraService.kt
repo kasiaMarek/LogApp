@@ -14,7 +14,7 @@ interface JiraApi {
 
     @Headers("Content-Type: application/json")
     @GET("search")
-    fun tasks(@Header("Authorization") token : String, @Query("assignee") assignee : String) : Call<Tasks>
+    fun tasks(@Header("Authorization") token : String, @Query("jql") assignee : String) : Call<Tasks>
 
     @Headers("Content-Type: application/json")
     @GET("issue/{issue}/worklog")
@@ -43,7 +43,7 @@ class JiraService(login : String, token : String, url : String) {
     }
 
     fun getTasks() : Call<Tasks>? {
-        return if (name != null) jira.tasks(auth, name!!) else null
+        return if (name != null) jira.tasks(auth, "assignee=$name") else null
     }
 
     fun getWorklog(issue : String) : Call<Worklogs> {

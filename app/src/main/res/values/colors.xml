@@ -20,7 +20,7 @@
 
     <color name="colorDivider">#1f000000</color> <!-- 12% black -->
 
-    <color name="colorBackground">#eeeeee</color>
+    <color name="colorBackground">#EEEEEE</color>
 
     <array name="colors">
         <item>@color/material_red_500</item>
