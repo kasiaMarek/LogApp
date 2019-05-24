@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun go_to_timer(v: View){
-
+        val i = Intent(baseContext, com.example.timetracker.stats.Statistics::class.java)
+        startActivity(i)
     }
 
 }
