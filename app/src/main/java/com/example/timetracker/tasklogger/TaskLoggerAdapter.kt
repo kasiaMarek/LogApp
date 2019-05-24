@@ -1,19 +1,23 @@
 package com.example.timetracker.tasklogger
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timetracker.model.Task
 import com.example.timetracker.R
+import com.example.timetracker.stoper.StopperActivity
 
 import kotlinx.android.synthetic.main.tasklogger_item.view.*
 
 
 
 
-class TaskLoggerAdapter(private val task_list: ArrayList<Task>) : RecyclerView.Adapter<TaskLoggerAdapter.TaskLoggerViewHolder>() {
+class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Context) : RecyclerView.Adapter<TaskLoggerAdapter.TaskLoggerViewHolder>() {
 
     var task_list_copy = ArrayList<Task>()
 
@@ -27,7 +31,7 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Task>) : RecyclerView.A
 
         view = layoutInflater.inflate(R.layout.tasklogger_item, parent, false)
 
-        return TaskLoggerViewHolder(view, viewType)
+        return TaskLoggerViewHolder(view, viewType, context)
     }
 
     override fun onBindViewHolder(holder: TaskLoggerViewHolder, position: Int) {
@@ -43,7 +47,7 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Task>) : RecyclerView.A
 
     override fun getItemCount() =task_list.size
 
-    inner class TaskLoggerViewHolder(itemView: View, viewType: Int) : RecyclerView.ViewHolder(itemView) {
+    inner class TaskLoggerViewHolder(itemView: View, viewType: Int, context: Context) : RecyclerView.ViewHolder(itemView) {
 
 
         val task_title = itemView.tasklogger_item_title
@@ -62,12 +66,11 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Task>) : RecyclerView.A
                     val clicked_task = task_list[pos]
                     //itemView.timeline_item_time_spent.text
 
-                    Toast.makeText(
-                        itemView.context,
-                        "todo: open stopwatch with id " + clicked_task.task_id,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    //todo: new intent to stopwatch
+                    val intent = Intent(context, StopperActivity::class.java).apply {
+                        putExtra("task", clicked_task.title)
+                        putExtra("taskId", clicked_task.task_num_id)
+                    }
+                    startActivity(context, intent, null)
 
                 }
             }

@@ -95,7 +95,7 @@ class MainActivity : BaseActivity() {
             override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
                 if(response.isSuccessful) {
                     val body = response.body()
-                    body!!.worklogs.forEach {task_list.add(Task(task.key, task.fields.summary, it.started,"9:00", it.timeSpentSeconds,  "started")) }
+                    body!!.worklogs.forEach {task_list.add(Task(task.key, it.id, task.fields.summary, it.started,"9:00", it.timeSpentSeconds,"started")) }
                     initRecyclerView()
                 } else {
                     Log.d("Log", "Wrong auth")

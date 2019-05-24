@@ -17,8 +17,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:layout_weight="1">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="10" android:layout_centerHorizontal="true" android:id="@+id/hour"
-                       android:fontFamily="sans-serif-light" style="@style/StopperTime"
+                      android:text="00" android:layout_centerHorizontal="true" android:id="@+id/hour"
+                      android:fontFamily="sans-serif-light" style="@style/StopperTime"
             />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:text="hours" android:layout_centerHorizontal="true" android:layout_below="@+id/hour"
@@ -30,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:layout_weight="1">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="10" android:layout_centerHorizontal="true" android:id="@+id/min"
+                      android:text="00" android:layout_centerHorizontal="true" android:id="@+id/min"
                       style="@style/StopperTime"
             />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:layout_weight="1">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="10" android:layout_centerHorizontal="true" android:id="@+id/sec"
+                      android:text="00" android:layout_centerHorizontal="true" android:id="@+id/sec"
                       android:fontFamily="sans-serif-light" style="@style/StopperTime"
             />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
         </RelativeLayout>
     </LinearLayout>
     <TextView
-            android:text="task name" style="@style/StopperText"
+            android:text="task name" style="@style/StopperTask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/taskName"
             android:layout_marginEnd="24dp" app:layout_constraintEnd_toEndOf="parent"
