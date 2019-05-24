@@ -1,0 +1,8 @@
+curl -D- -u maciekstosio@icloud.com:UlFUaGOPDpa8sisMqf8B7C14 -X GET -H "Content-Type: application/json" https://logapp.atlassian.net/rest/api/2/search?jql=assignee=Maciek\&fields=id,key,name > dupa.json
+
+curl -D- -u maciekstosio@icloud.com:UlFUaGOPDpa8sisMqf8B7C14 -X POST -H "Content-Type: application/json" https://logapp.atlassian.net/rest/api/2/issue/10003/worklog  --data '{ "timeSpentSeconds": 14000 }' > dupa.json
+
+curl -D- -u maciekstosio@icloud.com:UlFUaGOPDpa8sisMqf8B7C14 -X GET -H "Content-Type: application/json" https://logapp.atlassian.net/rest/api/2/issue/10003/worklog > dupa.json && code dupa.json
+
+curl -D- -u maciekstosio@icloud.com:UlFUaGOPDpa8sisMqf8B7C14 -X GET -H "Content-Type: application/json" https://logapp.atlassian.net/rest/api/2/myself > dupa.json
+
