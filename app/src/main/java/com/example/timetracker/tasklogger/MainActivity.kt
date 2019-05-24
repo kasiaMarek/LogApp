@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
 
         val settingsItem = menu.findItem(R.id.next_activity)
-        settingsItem.setIcon(R.drawable.goto_stats)
+        settingsItem.setIcon(R.drawable.goto_timeline)
         return super.onPrepareOptionsMenu(menu)
     }
 
