@@ -14,7 +14,7 @@ interface JiraApi {
 
     @Headers("Content-Type: application/json")
     @GET("search")
-    fun tasks(@Header("Authorization") token : String, @Query("assignee") assignee : String) : Call<Tasks>
+    fun tasks(@Header("Authorization") token : String, @Query("jql") assignee : String) : Call<Tasks>
 
     @Headers("Content-Type: application/json")
     @GET("issue/{issue}/worklog")
@@ -43,7 +43,7 @@ class JiraService(login : String, token : String, url : String) {
     }
 
     fun getTasks() : Call<Tasks>? {
-        return if (name != null) jira.tasks(auth, name!!) else null
+        return if (name != null) jira.tasks(auth, "assignee=$name") else null
     }
 
     fun getWorklog(issue : String) : Call<Worklogs> {
@@ -76,7 +76,7 @@ data class User(val displayName:String)
 
 data class Tasks(val total : Int, val issues : List<Issue>)
 data class Issue(val id : String, val key : String, val fields : Fields)
-data class Fields(val summary : String, val description : String?)
+data class Fields(val summary : String, val description : String?, val timespent : String?, val created : String?)
 data class Worklogs(val total : Int, val worklogs : List<Worklog>)
 data class Worklog(val id : String, val started : String, val timeSpentSeconds : String, val author : User)
 data class WorklogTime(val timeSpentSeconds : String)

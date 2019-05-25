@@ -2,6 +2,8 @@ package com.example.timetracker
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.timetracker.jiraservice.User
+import retrofit2.Callback
 
 const val PREFS_FILENAME = "com.timetracker"
 const val PASS = "password"
