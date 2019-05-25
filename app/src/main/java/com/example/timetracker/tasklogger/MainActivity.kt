@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
                 if(response.isSuccessful) {
                     val body = response.body()
-                    body!!.issues.forEach { task_list.add(Task(it.key, it.fields.summary, it.fields.created ?: "","9:00", parseSeconds(it.fields.timespent ?: "0"),  "started")) }
+                    body!!.issues.forEach { task_list.add(Task(it.key, it.id, it.fields.summary, it.fields.created ?: "","9:00", parseSeconds(it.fields.timespent ?: "0"),  "started")) }
                     initRecyclerView()
                 } else {
                     Log.d("Log", "Wrong auth")
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
     fun initAdapter(){
         layout_manager = LinearLayoutManager(this)
-        tasklogger_adapter = TaskLoggerAdapter(task_list)
+        tasklogger_adapter = TaskLoggerAdapter(task_list, this)
 
         tasklogger_recycler_view.layoutManager = layout_manager
         tasklogger_recycler_view.adapter = tasklogger_adapter

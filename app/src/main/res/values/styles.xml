@@ -6,6 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -48,6 +50,19 @@
         <item name="android:layout_width">25dp</item>
         <item name="android:layout_height">25dp</item>
         <item name="borderWidth">1dp</item>
+    </style>
+
+    <style name="StopperText" parent="android:Widget.TextView">
+        <item name="android:textColor">#ddd</item>
+        <item name="android:textSize">25dp</item>
+    </style>
+    <style name="StopperTask" parent="android:Widget.TextView">
+        <item name="android:textColor">#ddd</item>
+        <item name="android:textSize">35dp</item>
+    </style>
+    <style name="StopperTime" parent="android:Widget.TextView">
+        <item name="android:textColor">#ddd</item>
+        <item name="android:textSize">90dp</item>
     </style>
 
 </resources>

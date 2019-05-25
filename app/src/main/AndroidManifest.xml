@@ -12,6 +12,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".stats.Statistics">
+        <activity android:name=".stoper.StopperActivity">
         </activity>
         <activity android:name=".LoginActivity">
         </activity>

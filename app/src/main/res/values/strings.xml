@@ -4,6 +4,7 @@
 
     <string name="title_activity_login">LoginActivity</string>
     <string name="invalid_cred_error_msg">Provided credentials are invalid. Please try again.</string>
+    <string name="internet_problem">Can not reach server. Please try again.</string>
     <string name="invalid_project_error_msg">Provided project name is invalid. Please try again.</string>
     <string name="hours_short">h</string>
     <string name="minutes_short">min</string>
@@ -35,10 +36,15 @@
     <string name="example">Example</string>
     <string name="activity_example_label">Example</string>
     <string name="apply">Apply</string>
+    <string name="waiting">Waiting…</string>
+    <string name="no_log_under_minute">"You've worked below a minute. Time will not be logged."</string>
 
     <string-array name="line_type">
         <item>Normal</item>
         <item>Dashed</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
