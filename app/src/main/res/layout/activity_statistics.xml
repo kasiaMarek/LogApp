@@ -9,10 +9,12 @@
     <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart"
             android:layout_width="match_parent"
-            android:layout_height="0dp" android:layout_weight="1" android:layout_margin="25dp"/>
-    <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/chart2"
+            android:layout_height="match_parent" android:layout_weight="0.6" android:layout_margin="0dp">
+    </com.github.mikephil.charting.charts.BarChart>
+    <ListView
             android:layout_width="match_parent"
-            android:layout_height="0dp" android:layout_weight="1" android:layout_margin="25dp"/>
+            android:layout_height="match_parent"
+            android:id="@+id/list" android:layout_weight="0.4" android:paddingTop="16dp"/>
+
 
 </LinearLayout>

@@ -3,43 +3,120 @@ package com.example.timetracker.stats
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.timetracker.R
-import android.R.attr.entries
-import androidx.core.view.marginBottom
-import com.github.mikephil.charting.components.Description
 import kotlinx.android.synthetic.main.activity_statistics.*
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.*
-
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.components.YAxis
+import android.util.Log
+import androidx.core.content.ContextCompat
+import com.example.timetracker.jiraservice.Issue
+import com.example.timetracker.jiraservice.JiraServiceKeeper
+import com.example.timetracker.jiraservice.Tasks
+import com.example.timetracker.jiraservice.Worklogs
+import com.example.timetracker.model.DateObject
+import com.example.timetracker.model.TimeObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Statistics : AppCompatActivity() {
+    val data = ArrayList<Pair<DateObject, TimeObject>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistics)
-        val dataObjects = arrayOf(Pair(2,3), Pair(3,4), Pair(4,7))
-        val entries = ArrayList<BarEntry>();
-        for (data in dataObjects) {
-            // turn your data into Entry objects
-            entries.add(BarEntry(data.first.toFloat(), data.second.toFloat()))
-        }
-        val dataSet = BarDataSet(entries, "Label")
-        val barData = BarData(dataSet)
-        barData.setValueTextSize(10f) //text size above bars
-        chart.data = barData
-        chart.setDrawGridBackground(false)
-        //no grid
-        chart.axisRight.setDrawLabels(false)
-        chart.axisRight.setDrawGridLines(false)
-        chart.xAxis.setDrawGridLines(false)
-        chart.axisLeft.setDrawGridLines(false)
-        //x-axis to bottom
-        val xAxis = chart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        chart.legend.isEnabled = false
-        chart.description = Description().apply { this.text = "" }
+        getData()
+    }
 
-        chart.xAxis.textSize = 20f
-        chart.axisLeft.textSize = 20f
+    fun getData() {
+        val call = JiraServiceKeeper.jira.getTasks()!!
+        call.enqueue(object : Callback<Tasks> {
+
+            override fun onFailure(call: Call<Tasks>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    body!!.issues.forEach { getWorklogs(it) }
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+
+        })
+    }
+
+    fun getWorklogs(task : Issue) {
+        val call = JiraServiceKeeper.jira.getWorklog(task.key)
+        call.enqueue(object : Callback<Worklogs> {
+
+            override fun onFailure(call: Call<Worklogs>, t: Throwable) {
+                Log.d("Log", t.message)
+            }
+
+            override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    body!!.worklogs.forEach { data.add(Pair(DateObject(it.started), TimeObject(it.timeSpentSeconds))) }
+                    refreashChart()
+                } else {
+                    Log.d("Log", "Wrong auth")
+                }
+            }
+        })
+    }
+
+    fun refreashChart() {
+        val groupedData = data.groupBy{ it.first.stringDate }
+        val parsedData = groupedData.map{ Pair(it.value[0].first, TimeObject(it.value.sumBy{it.second.seconds}))}
+        val sortedData = parsedData.sortedBy { it.first.stringDate }
+        drawChart(sortedData)
+        showList(sortedData)
+    }
+
+    fun drawChart(data : List<Pair<DateObject, TimeObject>>) {
+        val labels = data.map{ it.first.stringShortDate}
+        val values = data.mapIndexed{index, value -> BarEntry(index.toFloat(), value.second.hours)}
+
+        chart.setDrawBarShadow(false)
+        chart.setDrawValueAboveBar(true)
+        chart.description.isEnabled = false
+        chart.setDrawGridBackground(false)
+
+        val xaxis = chart.xAxis
+        xaxis.setDrawGridLines(false)
+        xaxis.position = XAxis.XAxisPosition.BOTTOM
+        xaxis.granularity = 1f
+        xaxis.setDrawLabels(true)
+        xaxis.setDrawAxisLine(true)
+        xaxis.valueFormatter = IndexAxisValueFormatter(labels)
+
+        val yAxisLeft = chart.axisLeft
+        yAxisLeft.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
+        yAxisLeft.setDrawGridLines(false)
+        yAxisLeft.setDrawAxisLine(false)
+        yAxisLeft.isEnabled = false
+
+        chart.axisRight.isEnabled = false
+
+        val legend = chart.legend
+        legend.isEnabled = false
+
+        val barDataSet = BarDataSet(values, " ")
+        barDataSet.color = ContextCompat.getColor(this, R.color.colorPrimary)
+        barDataSet.setDrawValues(true)
+
+        val data = BarData(barDataSet)
+        chart.data = data
         chart.invalidate()
+    }
+
+    fun showList(data : List<Pair<DateObject, TimeObject>>) {
+        list.adapter = StatisticsAdapter(this, data)
     }
 }
