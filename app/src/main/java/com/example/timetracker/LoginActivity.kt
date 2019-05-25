@@ -1,10 +1,15 @@
 package com.example.timetracker
 
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Message
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
+import androidx.core.view.marginBottom
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.User
 import com.example.timetracker.test_main.MainActivity
@@ -20,6 +25,20 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         storage = Storage(this)
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            layout.removeView(imageView)
+        }
+        if(savedInstanceState != null) {
+            setErrorMessage(
+                savedInstanceState.getString("errorMessage").orEmpty(),
+                savedInstanceState.getInt("errorMessageColor")
+            )
+        }
+    }
+
+    private fun setErrorMessage(message: String = getString(R.string.invalid_cred_error_msg), color : Int = Color.RED) {
+        errorMessage.setTextColor(color)
+        errorMessage.text = message
     }
 
     private fun checkCredentials(credentials : Credentials) {
@@ -30,12 +49,13 @@ class LoginActivity : AppCompatActivity() {
                 credentials.projectName!!
             )
         ) {
+            setErrorMessage(message = getString(R.string.waiting), color = Color.GRAY)
             val call = JiraServiceKeeper.jira.tryMyself()
             call.enqueue(object : Callback<User> {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     Log.d("Log", t.message)
-                    errorMessage.text = getString(R.string.invalid_cred_error_msg)
+                    setErrorMessage(message = getString(R.string.internet_problem))
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
@@ -43,21 +63,18 @@ class LoginActivity : AppCompatActivity() {
                         val body = response.body()
                         JiraServiceKeeper.jira.name = body!!.displayName
                         storage.writeCredentials(credentials)
-                        errorMessage.text = ""
-
                         Log.d("Log", "you're successfully logged in")
-
                         val i = Intent(baseContext, MainActivity::class.java)
                         startActivity(i)
-
                     } else {
-                        errorMessage.text = getString(R.string.invalid_cred_error_msg)
+                        setErrorMessage()
                     }
                 }
             })
         } else {
-            errorMessage.text = getString(R.string.invalid_cred_error_msg)
+            setErrorMessage()
         }
+
 
     }
 
@@ -73,8 +90,15 @@ class LoginActivity : AppCompatActivity() {
                 )
             )
         } else {
-            errorMessage.text = getString(R.string.invalid_project_error_msg)
+            setErrorMessage(message = getString(R.string.invalid_project_error_msg))
         }
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("errorMessage", errorMessage.text.toString())
+        outState.putInt("errorMessageColor", errorMessage.currentTextColor)
+        Log.d("color", errorMessage.currentTextColor.toString())
     }
 }
