@@ -1,6 +1,7 @@
 package com.example.timetracker.tasklogger
 
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -21,8 +22,8 @@ import retrofit2.Response
 import java.util.ArrayList
 import android.view.Menu
 import android.view.MenuItem
+import com.example.timetracker.Storage
 import com.example.timetracker.timeline.MainActivity
-
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
-        menuInflater.inflate(R.menu.menu_with_next, menu)
+        menuInflater.inflate(R.menu.menu_with_next_and_logout, menu)
         return true
     }
 
@@ -113,13 +114,23 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
         val id = item.getItemId()
 
-        if (id == R.id.next_activity) {
-            val i = Intent(baseContext, MainActivity::class.java)
-            startActivity(i)
-            return true
-        }else if ( id == android.R.id.home) {
-            this.finish();
-            return true;
+        when (id) {
+            R.id.next_activity -> {
+                val i = Intent(baseContext, MainActivity::class.java)
+                startActivity(i)
+                return true
+            }
+            R.id.logout -> {
+                Storage(this).deleteCredentials()
+                val intent = Intent()
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+                return true
+            }
+            android.R.id.home -> {
+                this.finish()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)

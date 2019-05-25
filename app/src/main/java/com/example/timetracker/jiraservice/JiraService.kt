@@ -63,10 +63,13 @@ object JiraServiceKeeper {
     lateinit var jira : JiraService
 
     fun initJira(login : String, token : String, projectName : String): Boolean {
-        val url = "https://$projectName.atlassian.net/rest/api/3/"
-        if(URLUtil.isValidUrl(url)) {
-            jira = JiraService(login, token, url)
-            return true
+        val pattern = Regex("[a-zA-Z0-9]*")
+        if(projectName != "" && pattern.matches(projectName)) {
+            val url = "https://$projectName.atlassian.net/rest/api/3/"
+            if (URLUtil.isValidUrl(url)) {
+                jira = JiraService(login, token, url)
+                return true
+            }
         }
         return false
     }

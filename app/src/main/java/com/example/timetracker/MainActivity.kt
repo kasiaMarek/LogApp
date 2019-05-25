@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                         val body = response.body()
                         JiraServiceKeeper.jira.name = body!!.displayName
                         val i = Intent(baseContext, com.example.timetracker.tasklogger.MainActivity::class.java)
-                        startActivity(i)
+                        startActivityForResult(i, 123)
                     } else {
                         val i = Intent(baseContext, LoginActivity::class.java)
                         startActivity(i)
@@ -142,5 +142,13 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            val i = Intent(baseContext, LoginActivity::class.java)
+            startActivity(i)
+        }
     }
 }
