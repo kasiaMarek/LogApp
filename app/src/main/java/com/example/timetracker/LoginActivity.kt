@@ -57,25 +57,19 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
         } else {
-            errorMessage.text = getString(R.string.invalid_cred_error_msg)
+            errorMessage.text = getString(R.string.invalid_project_error_msg)
         }
 
     }
 
     fun onLoginClick(view: View) {
         val projectName = input_project.editText?.text.toString().trim()
-        val pattern = Regex("[a-zA-Z0-9]*")
-        if(projectName != "" && pattern.matches(projectName)) {
-            checkCredentials(
-                Credentials(
-                    input_login.editText?.text.toString(),
-                    input_token.editText?.text.toString(),
-                    projectName
-                )
+        checkCredentials(
+            Credentials(
+                input_login.editText?.text.toString(),
+                input_token.editText?.text.toString(),
+                projectName
             )
-        } else {
-            errorMessage.text = getString(R.string.invalid_project_error_msg)
-        }
-
+        )
     }
 }
