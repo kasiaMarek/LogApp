@@ -21,6 +21,9 @@ import com.example.timetracker.model.TimeObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.content.DialogInterface
+
+
 
 
 class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAttributes: TimelineAttributes) : RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
@@ -89,11 +92,17 @@ class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAt
                     val minutesPicker = theView.findViewById(R.id.minutes_picker) as NumberPicker
                     val taskTime = TimeObject(clickedDataItem.timeSpentSeconds).hoursAndMinutes
 
+
                     builder.setView(theView).setPositiveButton("Accept") { dialog, which ->
-                        val newTime = TimeObject(Pair(hourPicker.value, minutesPicker.value))
-                        itemView.timeline_item_time_spent.text = newTime.string
-                        task_list[pos].timeSpentSeconds = newTime.seconds.toString()
-                        updateWorklog(context, clickedDataItem.issueId, clickedDataItem.id, newTime)
+                        if(hourPicker.value != 0 || minutesPicker.value !=0){
+                            val newTime = TimeObject(Pair(hourPicker.value, minutesPicker.value))
+                            itemView.timeline_item_time_spent.text = newTime.string
+                            task_list[pos].timeSpentSeconds = newTime.seconds.toString()
+                            notifyDataSetChanged()
+                            updateWorklog(context, clickedDataItem.issueId, clickedDataItem.id, newTime)
+                        }else {
+                            Toast.makeText(context, R.string.no_history_change_to_zero, Toast.LENGTH_SHORT).show()
+                        }
                     }.setNegativeButton("Reject") { dialog, which -> }
 
                     hourPicker.minValue = 0

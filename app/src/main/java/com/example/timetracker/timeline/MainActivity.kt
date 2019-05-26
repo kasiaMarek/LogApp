@@ -22,7 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.ArrayList
 
-class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener{
     private lateinit var timeline_adapter: TimeLineAdapter
     private val task_list = ArrayList<Worklog>()
     private lateinit var layout_manager: LinearLayoutManager

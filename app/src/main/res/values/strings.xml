@@ -44,6 +44,7 @@
     <string name="apply">Apply</string>
     <string name="waiting">Waiting…</string>
     <string name="no_log_under_minute">"You've worked below a minute. Time will not be logged."</string>
+    <string name="no_history_change_to_zero">Task is in progress, you cannot change it\'s time to zero.</string>
     <string-array name="line_type">
         <item>Normal</item>
         <item>Dashed</item>
