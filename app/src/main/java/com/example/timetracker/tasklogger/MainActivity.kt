@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tasklogger_main_activity)
         setSupportActionBar(tasklogger_toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        getTastks()
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        getTasks()
         initRecyclerView()
 
         tasklogger_searchbar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -59,16 +59,16 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
             tasklogger_swipe_refresh.setRefreshing(true)
 
             Log.d("Log", "Initial fetch of data")
-            getTastks()
+            getTasks()
         })
 
     }
 
     override fun onRefresh() {
-        getTastks()
+        getTasks()
     }
 
-    fun getTastks() {
+    fun getTasks() {
         val call = JiraServiceKeeper.jira.getTasks()!!
         call.enqueue(object : Callback<Tasks> {
 
@@ -122,10 +122,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                 val intent = Intent()
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-                return true
-            }
-            android.R.id.home -> {
-                this.finish()
                 return true
             }
         }
