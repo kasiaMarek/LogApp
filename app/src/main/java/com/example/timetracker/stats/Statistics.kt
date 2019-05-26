@@ -2,6 +2,7 @@ package com.example.timetracker.stats
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.timetracker.R
@@ -24,6 +25,7 @@ import com.example.timetracker.jiraservice.Worklogs
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.model.TimeObject
 import com.example.timetracker.timeline.MainActivity
+import com.example.timetracker.timeline.whenNotNull
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -128,44 +130,14 @@ class Statistics : AppCompatActivity() {
         list.adapter = StatisticsAdapter(this, data)
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
-        menuInflater.inflate(R.menu.menu_with_next_and_logout, menu)
-        return true
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-
-        val settingsItem = menu.findItem(R.id.next_activity)
-        settingsItem.setIcon(R.drawable.goto_timeline)
-        return super.onPrepareOptionsMenu(menu)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
 
-        val id = item.getItemId()
-
-        when (id) {
-            R.id.next_activity -> {
-                val i = Intent(baseContext, MainActivity::class.java)
-                startActivity(i)
-                return true
-            }
-            R.id.logout -> {
-                Storage(this).deleteCredentials()
-                val intent = Intent()
-                setResult(Activity.RESULT_OK, intent)
-                finish()
-                return true
-            }
-            android.R.id.home -> {
-                this.finish()
-                return true
-            }
+        if ( id == android.R.id.home) {
+            this.finish()
+            return true
         }
 
         return super.onOptionsItemSelected(item)
     }
-
 }
