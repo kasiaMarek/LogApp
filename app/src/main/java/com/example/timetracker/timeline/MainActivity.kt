@@ -15,6 +15,7 @@ import com.example.timetracker.R
 import com.example.timetracker.jiraservice.*
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.stats.Statistics
+import com.example.timetracker.utils.ErrorUtils
 import com.github.vipulasri.timelineview.TimelineView
 import kotlinx.android.synthetic.main.timeline_main_activity.*
 import retrofit2.Call
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener{
         call.enqueue(object : Callback<Tasks> {
 
             override fun onFailure(call: Call<Tasks>, t: Throwable) {
-                Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                ErrorUtils.unexpected(this@MainActivity)
             }
 
             override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
@@ -80,7 +81,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener{
                     task_list.clear()
                     body!!.issues.forEach { getWorklogs(it) }
                 } else {
-                    Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                    ErrorUtils.unexpected(this@MainActivity)
                 }
                 refreshing  = false
             }
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener{
         call.enqueue(object : Callback<Worklogs> {
 
             override fun onFailure(call: Call<Worklogs>, t: Throwable) {
-                Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                ErrorUtils.unexpected(this@MainActivity)
             }
 
             override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener{
                     task_list.addAll(body!!.worklogs)
                     initRecyclerView()
                 } else {
-                    Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                    ErrorUtils.unexpected(this@MainActivity)
                 }
             }
 

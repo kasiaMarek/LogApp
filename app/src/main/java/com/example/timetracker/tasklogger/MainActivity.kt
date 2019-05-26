@@ -18,10 +18,10 @@ import retrofit2.Response
 import java.util.ArrayList
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.example.timetracker.Storage
 import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.timeline.MainActivity
+import com.example.timetracker.utils.ErrorUtils
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         call.enqueue(object : Callback<Tasks> {
 
             override fun onFailure(call: Call<Tasks>, t: Throwable) {
-                Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                ErrorUtils.unexpected(this@MainActivity)
             }
 
             override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                     task_list.addAll(body!!.issues)
                     initRecyclerView()
                 } else {
-                    Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                    ErrorUtils.unexpected(this@MainActivity)
                 }
             }
 
