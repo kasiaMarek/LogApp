@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
         })
-     setRefreshSwipe()
+        setRefreshSwipe()
     }
 
     fun setRefreshSwipe(){

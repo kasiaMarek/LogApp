@@ -1,5 +1,7 @@
 package com.example.timetracker.stats
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.timetracker.R
@@ -11,13 +13,17 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.components.YAxis
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.core.content.ContextCompat
+import com.example.timetracker.Storage
 import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.Tasks
 import com.example.timetracker.jiraservice.Worklogs
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.model.TimeObject
+import com.example.timetracker.timeline.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +34,8 @@ class Statistics : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistics)
+        setSupportActionBar(statisticsToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         getData()
     }
 
@@ -119,4 +127,45 @@ class Statistics : AppCompatActivity() {
     fun showList(data : List<Pair<DateObject, TimeObject>>) {
         list.adapter = StatisticsAdapter(this, data)
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+        menuInflater.inflate(R.menu.menu_with_next_and_logout, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+
+        val settingsItem = menu.findItem(R.id.next_activity)
+        settingsItem.setIcon(R.drawable.goto_timeline)
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        val id = item.getItemId()
+
+        when (id) {
+            R.id.next_activity -> {
+                val i = Intent(baseContext, MainActivity::class.java)
+                startActivity(i)
+                return true
+            }
+            R.id.logout -> {
+                Storage(this).deleteCredentials()
+                val intent = Intent()
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+                return true
+            }
+            android.R.id.home -> {
+                this.finish()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
 }

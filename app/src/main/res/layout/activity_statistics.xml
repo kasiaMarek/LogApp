@@ -6,15 +6,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".stats.Statistics">
-    <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/chart"
+    <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:layout_weight="0.6" android:layout_margin="0dp">
-    </com.github.mikephil.charting.charts.BarChart>
-    <ListView
+            android:layout_height="?attr/actionBarSize"
+            style="@style/HeaderBar"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:elevation="4dp"
+            android:id="@+id/statisticsToolbar"/>
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/list" android:layout_weight="0.4" android:paddingTop="16dp"/>
+            android:layout_height="match_parent" android:layout_weight="0.6">
+        <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_weight="0.6" android:layout_margin="0dp">
+        </com.github.mikephil.charting.charts.BarChart>
+        <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/list" android:layout_weight="0.4" android:paddingTop="16dp"/>
+    </LinearLayout>
 
 
 </LinearLayout>

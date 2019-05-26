@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         })
 
     }
+
     override fun onRefresh() {
         getTastks()
     }
@@ -117,7 +118,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
         menuInflater.inflate(R.menu.menu_with_next, menu)
         return true
     }
