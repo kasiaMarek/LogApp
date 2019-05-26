@@ -21,9 +21,7 @@ import com.example.timetracker.model.TimeObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.content.DialogInterface
-
-
+import com.example.timetracker.utils.ErrorUtils
 
 
 class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAttributes: TimelineAttributes) : RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
@@ -100,18 +98,22 @@ class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAt
                             task_list[pos].timeSpentSeconds = newTime.seconds.toString()
                             notifyDataSetChanged()
                             updateWorklog(context, clickedDataItem.issueId, clickedDataItem.id, newTime)
-                        }else {
+                        } else {
                             Toast.makeText(context, R.string.no_history_change_to_zero, Toast.LENGTH_SHORT).show()
                         }
                     }.setNegativeButton("Reject") { dialog, which -> }
 
-                    hourPicker.minValue = 0
-                    hourPicker.maxValue = 12
-                    hourPicker.value = taskTime.first
+                    hourPicker.apply {
+                        minValue = 0
+                        maxValue = 12
+                        value = taskTime.first
+                    }
 
-                    minutesPicker.minValue = 0
-                    minutesPicker.maxValue = 59
-                    minutesPicker.value = taskTime.second
+                    minutesPicker.apply {
+                        minValue = 0
+                        maxValue = 59
+                        value = taskTime.second
+                    }
 
                     builder.show()
                 }
@@ -125,14 +127,14 @@ class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAt
 
         call.enqueue(object : Callback<Worklog> {
             override fun onFailure(call: Call<Worklog>, t: Throwable) {
-                Toast.makeText(context, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                ErrorUtils.unexpected(context)
             }
 
             override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {
                 if(response.isSuccessful) {
                     Toast.makeText(context, R.string.success_update, Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                    ErrorUtils.unexpected(context)
                 }
             }
 

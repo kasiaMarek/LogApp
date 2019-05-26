@@ -7,5 +7,5 @@ data class DateObject(val date : Date) {
     fun format(pattern : String) = SimpleDateFormat(pattern).format(date)
     val stringDate = format("yyyy/MM/dd")
     val stringFullDate = format("HH:mm dd/MM/yyyy")
-    val stringShortDate = format("EEE MM/dd")
+    val stringShortDate = format("EEE dd/MM")
 }

@@ -11,7 +11,6 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.components.YAxis
-import android.widget.Toast
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import com.example.timetracker.jiraservice.Issue
@@ -20,10 +19,16 @@ import com.example.timetracker.jiraservice.Tasks
 import com.example.timetracker.jiraservice.Worklogs
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.model.TimeObject
+import com.example.timetracker.utils.ErrorUtils
 import com.github.mikephil.charting.charts.Chart
+import com.github.mikephil.charting.data.Entry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.github.mikephil.charting.utils.ViewPortHandler
+import com.github.mikephil.charting.formatter.IValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+
 
 class Statistics : AppCompatActivity() {
     val data = ArrayList<Pair<DateObject, TimeObject>>()
@@ -46,7 +51,7 @@ class Statistics : AppCompatActivity() {
         call.enqueue(object : Callback<Tasks> {
 
             override fun onFailure(call: Call<Tasks>, t: Throwable) {
-                Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                ErrorUtils.unexpected(this@Statistics)
             }
 
             override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
@@ -54,7 +59,7 @@ class Statistics : AppCompatActivity() {
                     val body = response.body()
                     body!!.issues.forEach { getWorklogs(it) }
                 } else {
-                    Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                    ErrorUtils.unexpected(this@Statistics)
                 }
             }
 
@@ -66,7 +71,7 @@ class Statistics : AppCompatActivity() {
         call.enqueue(object : Callback<Worklogs> {
 
             override fun onFailure(call: Call<Worklogs>, t: Throwable) {
-                Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                ErrorUtils.unexpected(this@Statistics)
             }
 
             override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
@@ -75,7 +80,7 @@ class Statistics : AppCompatActivity() {
                     body!!.worklogs.forEach { data.add(Pair(DateObject(it.started), TimeObject(it.timeSpentSeconds))) }
                     refreashChart()
                 } else {
-                    Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+                    ErrorUtils.unexpected(this@Statistics)
                 }
             }
         })
@@ -121,7 +126,7 @@ class Statistics : AppCompatActivity() {
         val barDataSet = BarDataSet(values, " ")
         barDataSet.color = ContextCompat.getColor(this, R.color.colorPrimary)
         barDataSet.setDrawValues(true)
-        barDataSet.setValueTextSize(14f)
+        barDataSet.valueTextSize = 14f
 
         val data = BarData(barDataSet)
         chart.data = data
@@ -135,7 +140,7 @@ class Statistics : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-        if ( id == android.R.id.home) {
+        if (id == android.R.id.home) {
             this.finish()
             return true
         }

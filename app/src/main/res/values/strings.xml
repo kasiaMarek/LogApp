@@ -6,6 +6,7 @@
     <string name="toolbar_timeline">Timeline</string>
     <string name="toolbar_stats">Statistics</string>
     <string name="toolbar_stopwatch">Stopwatch</string>
+    <string name="stat_chart_description">Hours of work per day</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="unexpected_error">Sorry, unexpected error has occurred</string>
     <string name="success_update">Updated successfully</string>
