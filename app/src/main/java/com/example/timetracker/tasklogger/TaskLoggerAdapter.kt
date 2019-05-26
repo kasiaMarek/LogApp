@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.timetracker.model.Task
 import com.example.timetracker.R
 import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.model.TimeObject
@@ -54,14 +53,11 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Issue>, val context: Co
         init {
 
             itemView.setOnClickListener { v ->
-                // listener for clicking on a task, shows alert box
-                // get position
                 val pos = adapterPosition
 
                 // check if item still exists
                 if (pos != RecyclerView.NO_POSITION) {
                     val clicked_task = task_list[pos]
-                    //itemView.timeline_item_time_spent.text
 
                     val intent = Intent(context, StopperActivity::class.java).apply {
                         putExtra("task", clicked_task.fields.summary)

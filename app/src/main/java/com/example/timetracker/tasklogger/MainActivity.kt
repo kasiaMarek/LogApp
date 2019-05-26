@@ -3,17 +3,14 @@ package com.example.timetracker.tasklogger
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.timetracker.model.Task
 import com.example.timetracker.R
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.Tasks
-import com.example.timetracker.utils.DateTimeUtils.parseSeconds
 import kotlinx.android.synthetic.main.tasklogger_main_activity.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,6 +18,7 @@ import retrofit2.Response
 import java.util.ArrayList
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.timetracker.Storage
 import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.timeline.MainActivity
@@ -56,12 +54,10 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     fun setRefreshSwipe(){
         tasklogger_swipe_refresh.setOnRefreshListener(this)
 
-        tasklogger_swipe_refresh.post(Runnable {
-            tasklogger_swipe_refresh.setRefreshing(true)
-
-            Log.d("Log", "Initial fetch of data")
+        tasklogger_swipe_refresh.post {
+            tasklogger_swipe_refresh.isRefreshing = true
             getTastks()
-        })
+        }
 
     }
 
@@ -74,7 +70,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         call.enqueue(object : Callback<Tasks> {
 
             override fun onFailure(call: Call<Tasks>, t: Throwable) {
-                Log.d("Log", t.message)
+                Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
@@ -85,13 +81,12 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                     task_list.addAll(body!!.issues)
                     initRecyclerView()
                 } else {
-                    Log.d("Log", "Wrong auth")
+                    Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
             }
 
         })
         tasklogger_swipe_refresh.setRefreshing(false);
-        Log.d("Log", "Refreshed!")
     }
 
 

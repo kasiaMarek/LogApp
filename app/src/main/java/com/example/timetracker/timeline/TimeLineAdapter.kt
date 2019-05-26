@@ -1,18 +1,16 @@
 package com.example.timetracker.timeline
 
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.github.vipulasri.timelineview.TimelineView
 import kotlinx.android.synthetic.main.timeline_item.view.*
 import androidx.appcompat.app.AlertDialog
-import com.example.timetracker.model.Task
 import com.example.timetracker.model.TimelineAttributes
-import com.example.timetracker.utils.DateTimeUtils
 import com.example.timetracker.utils.VectorDrawableUtils
 import com.example.timetracker.R
 import com.example.timetracker.jiraservice.JiraServiceKeeper
@@ -25,7 +23,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class TimeLineAdapter(private val task_list: ArrayList<Task>, private var mAttributes: TimelineAttributes) : RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
+class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAttributes: TimelineAttributes) : RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         return TimelineView.getTimeLineViewType(position, itemCount)
@@ -44,14 +42,14 @@ class TimeLineAdapter(private val task_list: ArrayList<Task>, private var mAttri
         val timeLineModel = task_list[position]
 
         holder.timeline.marker = VectorDrawableUtils.getDrawable(holder.itemView.context, R.drawable.ic_marker_active,  mAttributes.markerColor)
-        holder.task_date.text = DateObject(timeLineModel.date).stringFullDate
-        holder.task_message.text = timeLineModel.title
-        holder.task_time_spent.text = TimeObject(timeLineModel.time_spent).string
-        holder.task_id.text = timeLineModel.task_id
+        holder.task_date.text = DateObject(timeLineModel.started).stringFullDate
+        holder.task_message.text = timeLineModel.issueSummary
+        holder.task_time_spent.text = TimeObject(timeLineModel.timeSpentSeconds).string
+        holder.task_id.text = timeLineModel.issueKey
     }
 
 
-    override fun getItemCount() =task_list.size
+    override fun getItemCount() = task_list.size
 
     inner class TimeLineViewHolder(itemView: View, viewType: Int) : RecyclerView.ViewHolder(itemView){
 
@@ -79,76 +77,53 @@ class TimeLineAdapter(private val task_list: ArrayList<Task>, private var mAttri
             itemView.setOnClickListener { v ->                  // listener for clicking on a task, shows alert box
                 // get position
                 val pos = adapterPosition
-
                 // check if item still exists
                 if (pos != RecyclerView.NO_POSITION) {
-                    //val clickedDataItem = task_list[pos]
+                    val clickedDataItem = task_list[pos]
 
                     var context = v.context
                     val builder = AlertDialog.Builder(context)
-
                     var inflater = LayoutInflater.from(context)
-
                     val theView = inflater.inflate(R.layout.number_picker_dialog,null)
-                    val hour_picker = theView.findViewById(R.id.hour_picker) as NumberPicker
-                    val minutes_picker = theView.findViewById(R.id.minutes_picker) as NumberPicker
-
-                    hour_picker.value = Integer.parseInt(itemView.timeline_item_time_spent.text.toString())/3600
-                    minutes_picker.value = (Integer.parseInt(itemView.timeline_item_time_spent.text.toString())%3600)/(60)
+                    val hourPicker = theView.findViewById(R.id.hour_picker) as NumberPicker
+                    val minutesPicker = theView.findViewById(R.id.minutes_picker) as NumberPicker
+                    val taskTime = TimeObject(clickedDataItem.timeSpentSeconds).hoursAndMinutes
 
                     builder.setView(theView).setPositiveButton("Accept") { dialog, which ->
-                        var new_value = ""
-
-                        if(hour_picker.value == 0){
-                            if(minutes_picker.value != 0 ){
-                                new_value = minutes_picker.value.toString() + "min"
-                            }
-                        }else{
-                            if(minutes_picker.value == 0 ){
-                                new_value = hour_picker.value.toString() + "h"
-                            }else{
-                                new_value = hour_picker.value.toString() + "h " + minutes_picker.value.toString() + "min"
-                            }
-                        }
-
-                        itemView.timeline_item_time_spent.text = new_value
-
-                        //todo: send new values to jira?
-                        Log.d("TEST ASD", itemView.timeline_item_time_spent.text.toString())
-
+                        val newTime = TimeObject(Pair(hourPicker.value, minutesPicker.value))
+                        itemView.timeline_item_time_spent.text = newTime.string
+                        task_list[pos].timeSpentSeconds = newTime.seconds.toString()
+                        updateWorklog(context, clickedDataItem.issueId, clickedDataItem.id, newTime)
                     }.setNegativeButton("Reject") { dialog, which -> }
 
-                    hour_picker.minValue = 0
-                    hour_picker.maxValue = 12
-                    minutes_picker.value = 1
+                    hourPicker.minValue = 0
+                    hourPicker.maxValue = 12
+                    hourPicker.value = taskTime.first
 
-                    minutes_picker.minValue = 0
-                    minutes_picker.maxValue = 59
-                    minutes_picker.value = 0
+                    minutesPicker.minValue = 0
+                    minutesPicker.maxValue = 59
+                    minutesPicker.value = taskTime.second
 
                     builder.show()
-
                 }
             }
 
         }
     }
 
-    fun updateWorklog(issue : String, id : String, time : String) {
-        val call = JiraServiceKeeper.jira.updateWorklog(issue, id, WorklogTime(time))
+    fun updateWorklog(context : Context, issueId : String, worklogId : String, time : TimeObject) {
+        val call = JiraServiceKeeper.jira.updateWorklog(issueId, worklogId, WorklogTime(time.seconds.toString()))
 
         call.enqueue(object : Callback<Worklog> {
-
             override fun onFailure(call: Call<Worklog>, t: Throwable) {
-                Log.d("Log", t.message)
+                Toast.makeText(context, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {
                 if(response.isSuccessful) {
-                    val body = response.body()
-                    Log.d("Log", "issue:" + body!!.started)
+                    Toast.makeText(context, R.string.success_update, Toast.LENGTH_SHORT).show()
                 } else {
-                    Log.d("Log", "Wrong auth")
+                    Toast.makeText(context, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
             }
 

@@ -1,7 +1,6 @@
 package com.example.timetracker.timeline
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -10,17 +9,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.timetracker.model.Task
 import com.example.timetracker.model.TimelineAttributes
 import com.example.timetracker.utils.Utils
 import com.example.timetracker.R
-import com.example.timetracker.jiraservice.Issue
-import com.example.timetracker.jiraservice.JiraServiceKeeper
-import com.example.timetracker.jiraservice.Tasks
-import com.example.timetracker.jiraservice.Worklogs
+import com.example.timetracker.jiraservice.*
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.stats.Statistics
-import com.example.timetracker.tasklogger.MainActivity
 import com.github.vipulasri.timelineview.TimelineView
 import kotlinx.android.synthetic.main.timeline_main_activity.*
 import retrofit2.Call
@@ -29,10 +23,8 @@ import retrofit2.Response
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
-    // todo: main timeline activity
-
     private lateinit var timeline_adapter: TimeLineAdapter
-    private val task_list = ArrayList<Task>()
+    private val task_list = ArrayList<Worklog>()
     private lateinit var layout_manager: LinearLayoutManager
     private lateinit var mAttributes: TimelineAttributes
 
@@ -60,14 +52,12 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     fun setRefreshSwipe(){
         timeline_swipe_refresh.setOnRefreshListener(this)
 
-        timeline_swipe_refresh.post(Runnable {
-            timeline_swipe_refresh.setRefreshing(true)
-
-            Log.d("Log", "Initial fetch of data")
+        timeline_swipe_refresh.post {
+            timeline_swipe_refresh.isRefreshing = true
             getTastks()
-        })
-
+        }
     }
+
     override fun onRefresh() {
         getTastks()
     }
@@ -77,21 +67,21 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         call.enqueue(object : Callback<Tasks> {
 
             override fun onFailure(call: Call<Tasks>, t: Throwable) {
-                Log.d("Log", t.message)
+                Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
                 if(response.isSuccessful) {
                     val body = response.body()
+                    task_list.clear()
                     body!!.issues.forEach { getWorklogs(it) }
                 } else {
-                    Log.d("Log", "Wrong auth")
+                    Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
             }
 
         })
-        timeline_swipe_refresh.setRefreshing(false);
-        Log.d("Log", "Refreshed!")
+        timeline_swipe_refresh.isRefreshing = false
     }
 
     fun getWorklogs(task : Issue) {
@@ -99,18 +89,20 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         call.enqueue(object : Callback<Worklogs> {
 
             override fun onFailure(call: Call<Worklogs>, t: Throwable) {
-                Log.d("Log", t.message)
+                Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
                 if(response.isSuccessful) {
-                    // also delete previous entries from task_list
-                    task_list.clear()
                     val body = response.body()
-                    body!!.worklogs.forEach {task_list.add(Task(task.key, it.id, task.fields.summary, it.started,"9:00", it.timeSpentSeconds,"started")) }
+                    body!!.worklogs.forEach {
+                        it.issueKey = task.key
+                        it.issueSummary = task.fields.summary
+                    }
+                    task_list.addAll(body!!.worklogs)
                     initRecyclerView()
                 } else {
-                    Log.d("Log", "Wrong auth")
+                    Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -118,7 +110,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
         menuInflater.inflate(R.menu.menu_with_next, menu)
         return true
     }
@@ -146,16 +137,15 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun initRecyclerView() {
+        task_list.sortByDescending{ DateObject(it.started).stringDate }
         initAdapter()
     }
 
     private fun initAdapter() {
-
         layout_manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         timeline_adapter = TimeLineAdapter(task_list, mAttributes)
 
         timeline_recycler_view.layoutManager = layout_manager
         timeline_recycler_view.adapter = timeline_adapter
     }
-
 }

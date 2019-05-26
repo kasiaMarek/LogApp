@@ -5,6 +5,7 @@ import kotlin.math.floor
 
 data class TimeObject(val seconds : Int) {
     constructor(secondsString: String) : this(Integer.parseInt(secondsString))
+    constructor(secondsAndMinutes: Pair<Int, Int>) : this((secondsAndMinutes.first*60+secondsAndMinutes.second)*60)
 
     val minutes : Float = seconds/60f
     val hours : Float = minutes/60f

@@ -7,6 +7,8 @@
     <string name="toolbar_stats">Statistics</string>
     <string name="toolbar_stopwatch">Stopwatch</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="unexpected_error">Sorry, unexpected error has occurred</string>
+    <string name="success_update">Updated successfully</string>
     <string name="invalid_cred_error_msg">Provided credentials are invalid. Please try again.</string>
     <string name="internet_problem">Can not reach server. Please try again.</string>
     <string name="invalid_project_error_msg">Provided project name is invalid. Please try again.</string>
