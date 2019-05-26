@@ -143,4 +143,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         tasklogger_recycler_view.adapter = tasklogger_adapter
     }
 
+    override fun onBackPressed() {}
+
 }
