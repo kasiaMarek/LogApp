@@ -11,7 +11,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.components.YAxis
-import android.util.Log
+import android.widget.Toast
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import com.example.timetracker.jiraservice.Issue
@@ -46,7 +46,7 @@ class Statistics : AppCompatActivity() {
         call.enqueue(object : Callback<Tasks> {
 
             override fun onFailure(call: Call<Tasks>, t: Throwable) {
-                Log.d("Log", t.message)
+                Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Tasks>, response: Response<Tasks>) {
@@ -54,7 +54,7 @@ class Statistics : AppCompatActivity() {
                     val body = response.body()
                     body!!.issues.forEach { getWorklogs(it) }
                 } else {
-                    Log.d("Log", "Wrong auth")
+                    Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -66,7 +66,7 @@ class Statistics : AppCompatActivity() {
         call.enqueue(object : Callback<Worklogs> {
 
             override fun onFailure(call: Call<Worklogs>, t: Throwable) {
-                Log.d("Log", t.message)
+                Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Worklogs>, response: Response<Worklogs>) {
@@ -75,7 +75,7 @@ class Statistics : AppCompatActivity() {
                     body!!.worklogs.forEach { data.add(Pair(DateObject(it.started), TimeObject(it.timeSpentSeconds))) }
                     refreashChart()
                 } else {
-                    Log.d("Log", "Wrong auth")
+                    Toast.makeText(this@Statistics, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
             }
         })
