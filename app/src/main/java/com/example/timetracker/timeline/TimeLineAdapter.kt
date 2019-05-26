@@ -44,7 +44,7 @@ class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAt
         holder.timeline.marker = VectorDrawableUtils.getDrawable(holder.itemView.context, R.drawable.ic_marker_active,  mAttributes.markerColor)
         holder.task_date.text = DateObject(timeLineModel.started).stringFullDate
         holder.task_message.text = timeLineModel.issueSummary
-        holder.task_time_spent.text = TimeObject(timeLineModel.timeSpentSeconds).string
+        holder.task_time_spent.text = TimeObject(timeLineModel.timeSpentSeconds).min_string
         holder.task_id.text = timeLineModel.issueKey
     }
 

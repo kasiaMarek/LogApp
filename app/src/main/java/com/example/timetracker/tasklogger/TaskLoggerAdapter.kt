@@ -35,7 +35,7 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Issue>, val context: Co
         val timeLineModel = task_list[position]
 
         holder.task_title.text = timeLineModel.fields.summary
-        holder.task_time_spent.text = TimeObject(timeLineModel.fields.timespent).string
+        holder.task_time_spent.text = TimeObject(timeLineModel.fields.timespent).min_string
         holder.task_id.text = timeLineModel.key
 
     }

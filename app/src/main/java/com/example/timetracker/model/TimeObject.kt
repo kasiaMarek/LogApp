@@ -13,4 +13,17 @@ data class TimeObject(val seconds : Int) {
     val intHours : Int = floor(hours).toInt()
     val hoursAndMinutes : Pair<Int, Int> = Pair(intHours, ceil(intMinutes - intHours * 60.0).toInt())
     val string =  "${hoursAndMinutes.first}h ${hoursAndMinutes.second}min"
+    val min_string =if(hoursAndMinutes.first == 0){
+                        if (hoursAndMinutes.second == 0){
+                            ""
+                        }else{
+                            hoursAndMinutes.second.toString() + "min"
+                        }
+                    }else{
+                        if (hoursAndMinutes.second == 0){
+                            hoursAndMinutes.first.toString() + "h"
+                        }else{
+                            string
+                        }
+                    };
 }
