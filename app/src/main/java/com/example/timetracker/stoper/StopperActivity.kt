@@ -17,17 +17,15 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.Duration
 import java.time.LocalDateTime
-import android.R.attr.data
 
 class StopperActivity : AppCompatActivity() {
-    private val param = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
     lateinit var task: String
     var stop : ImageButton? = null
     var start : ImageButton? = null
     var save : ImageButton? = null
     var on : Boolean = false
     var startTime:LocalDateTime? = null
-    var totalTime:Long = 0
+    var totalTime:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +34,7 @@ class StopperActivity : AppCompatActivity() {
         taskName.text = task
         if(savedInstanceState != null) {
             on = savedInstanceState.getBoolean("on")
-            totalTime = savedInstanceState.getLong("totalTime")
+            totalTime = savedInstanceState.getInt("totalTime")
             changeTime(totalTime)
         }
         if(on) {
@@ -47,22 +45,17 @@ class StopperActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeTime(diff : Long) {
-        val sect = (diff%60)
-        val mint = ((diff/60)%60)
-        val hourt = ((diff/60)/60)
-        val sectS = if(sect < 10)  "0$sect" else sect.toString()
-        val mintS = if(mint < 10)  "0$mint" else mint.toString()
-        val hourtS = if(hourt < 10)  "0$hourt" else hourt.toString()
+    private fun changeTime(diff : Int) {
+        val time = Time(diff)
         runOnUiThread {
-            if (sec.text.toString().toLong() != sect) {
-                sec.text = sectS
+            if (sec.text.toString().toInt() != time.sec) {
+                sec.text = time.secS
             }
-            if (min.text.toString().toLong() != mint) {
-                min.text = mintS
+            if (min.text.toString().toInt() != time.min) {
+                min.text = time.minS
             }
-            if (hour.text.toString().toLong() != hourt) {
-                hour.text = hourtS
+            if (hour.text.toString().toInt() != time.hour) {
+                hour.text = time.hourS
             }
         }
 
@@ -113,41 +106,54 @@ class StopperActivity : AppCompatActivity() {
 
     }
 
+    private fun createImageButton(drawable : Int, onClick: () -> Unit) : ImageButton {
+        val param = LinearLayout.LayoutParams(
+            0,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            1.0f
+        )
+        return ImageButton( this ).apply {
+            setImageResource(drawable)
+            setOnClickListener{ onClick() }
+            setBackgroundColor(Color.TRANSPARENT)
+            layoutParams = param
+        }
+    }
+
     private fun putStopIcon() {
-        val stop = ImageButton( this )
-        stop.setImageResource(R.drawable.pause)
-        stop.setOnClickListener{ stop() }
-        stop.setBackgroundColor(Color.TRANSPARENT)
+        val stop = createImageButton(R.drawable.pause) {stop()}
         iconRow.addView(stop)
-        stop.layoutParams = param
         this.stop = stop
     }
 
     private fun putStartIcon() {
-        val start = ImageButton( this )
-        val save = ImageButton(this)
-        start.setImageResource(R.drawable.play)
-        save.setImageResource(R.drawable.check)
-        start.setOnClickListener { start() }
-        save.setOnClickListener { save() }
-        start.setBackgroundColor(Color.TRANSPARENT)
-        save.setBackgroundColor(Color.TRANSPARENT)
-        save.layoutParams = param
-        start.layoutParams = param
+        val start = createImageButton(R.drawable.play) {start()}
         iconRow.addView(start)
-        iconRow.addView(save)
         this.start = start
+        val save = createImageButton(R.drawable.check) {save()}
+        iconRow.addView(save)
         this.save = save
     }
 
-    private fun getTimeFromClock() : Long {
-        return sec.text.toString().toLong() + min.text.toString().toLong()*60 + hour.text.toString().toLong()*60*60
+    private fun getTimeFromClock() : Int {
+        return sec.text.toString().toInt() + min.text.toString().toInt()*60 + hour.text.toString().toInt()*60*60
     }
 
     public override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         if(on) totalTime += getTimeFromClock()
         savedInstanceState.putBoolean("on", on)
-        savedInstanceState.putLong("totalTime", totalTime)
+        savedInstanceState.putInt("totalTime", totalTime)
+    }
+
+    private class Time(diff : Int) {
+        val sec = diff%60
+        val min =  (diff/60)%60
+        val hour = ((diff/60)/60)
+        val secS = valToString(sec)
+        val minS = valToString(min)
+        val hourS = valToString(hour)
+
+        fun valToString(v:Int) : String = if(v < 10) "0$v" else v.toString()
     }
 }
