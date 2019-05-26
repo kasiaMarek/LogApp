@@ -1,6 +1,5 @@
 package com.example.timetracker.tasklogger
 
-
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -34,9 +33,10 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tasklogger_main_activity)
-
         setSupportActionBar(tasklogger_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        getTastks()
+        initRecyclerView()
 
         tasklogger_searchbar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onRefresh() {
         getTastks()
+       // JiraServiceKeeper.jira.getTasks()
     }
 
     fun getTastks() {
@@ -135,6 +136,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
         return super.onOptionsItemSelected(item)
     }
+
 
     fun initRecyclerView(){
         initAdapter()

@@ -8,6 +8,7 @@ import com.example.timetracker.R
 import android.widget.ImageButton
 import kotlinx.android.synthetic.main.activity_stopper.*
 import android.widget.LinearLayout
+import android.widget.Toast
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.Worklog
 import com.example.timetracker.jiraservice.WorklogTime
@@ -16,6 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.Duration
 import java.time.LocalDateTime
+import android.R.attr.data
 
 class StopperActivity : AppCompatActivity() {
     private val param = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
@@ -100,6 +102,12 @@ class StopperActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<Worklog>, response: Response<Worklog>) {}
                 override fun onFailure(call: Call<Worklog>, t: Throwable) {}
             })
+        } else {
+            Toast.makeText(
+                this,
+                getString(R.string.no_log_under_minute),
+                Toast.LENGTH_LONG
+            ).show()
         }
         finish()
 

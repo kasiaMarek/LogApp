@@ -21,9 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".timeline.MainActivity"  android:label="@string/toolbar_timeline"/>
-
         <activity android:name=".tasklogger.MainActivity" android:label="@string/toolbar_tasklogger"/>
-
         <activity android:name=".stoper.StopperActivity" android:label="@string/toolbar_stopwatch"/>
     </application>
 

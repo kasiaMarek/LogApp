@@ -1,6 +1,4 @@
 package com.example.timetracker.timeline
-
-
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -27,10 +25,7 @@ import retrofit2.Response
 import java.util.ArrayList
 
 
-
-
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
-
     // todo: main timeline activity
 
     private lateinit var timeline_adapter: TimeLineAdapter
@@ -40,12 +35,9 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       setContentView(R.layout.timeline_main_activity)
-
-
+        setContentView(R.layout.timeline_main_activity)
         setSupportActionBar(timeline_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         mAttributes = TimelineAttributes(
             markerSize = Utils.dpToPx(20f, this),
             markerColor = ContextCompat.getColor(this, R.color.material_grey_500),
@@ -77,8 +69,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     override fun onRefresh() {
         getTastks()
     }
-
-
 
     fun getTastks() {
         val call = JiraServiceKeeper.jira.getTasks()!!
@@ -155,7 +145,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun initRecyclerView() {
         initAdapter()
-
     }
 
     private fun initAdapter() {

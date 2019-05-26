@@ -48,7 +48,7 @@
             />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:text="seconds" android:layout_centerHorizontal="true" android:layout_below="@+id/sec"
-                      style="@style/StopperText"
+                     style="@style/StopperText"
             />
         </RelativeLayout>
     </LinearLayout>

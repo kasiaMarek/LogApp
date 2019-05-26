@@ -48,6 +48,12 @@
         <item name="dsb_indicatorColor">@color/colorAccent</item>
     </style>
 
+    <style name="BorderImageView">
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="borderWidth">1dp</item>
+    </style>
+
     <style name="StopperText" parent="android:Widget.TextView">
         <item name="android:textColor">#ddd</item>
         <item name="android:textSize">25dp</item>
@@ -59,12 +65,6 @@
     <style name="StopperTime" parent="android:Widget.TextView">
         <item name="android:textColor">#ddd</item>
         <item name="android:textSize">90dp</item>
-    </style>
-
-    <style name="BorderImageView">
-        <item name="android:layout_width">25dp</item>
-        <item name="android:layout_height">25dp</item>
-        <item name="borderWidth">1dp</item>
     </style>
 
 </resources>
