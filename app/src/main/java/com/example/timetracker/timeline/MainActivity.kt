@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private val task_list = ArrayList<Worklog>()
     private lateinit var layout_manager: LinearLayoutManager
     private lateinit var mAttributes: TimelineAttributes
+    private var refreshing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +60,10 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        getTastks()
+        if (refreshing == false ) {
+            refreshing = true
+            getTastks()
+        }
     }
 
     fun getTastks() {
@@ -78,6 +82,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                 } else {
                     Toast.makeText(this@MainActivity, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
+                refreshing  = false
             }
 
         })
