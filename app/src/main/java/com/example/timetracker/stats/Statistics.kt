@@ -1,8 +1,5 @@
 package com.example.timetracker.stats
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.timetracker.R
@@ -14,18 +11,14 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.components.YAxis
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
-import com.example.timetracker.Storage
 import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.Tasks
 import com.example.timetracker.jiraservice.Worklogs
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.model.TimeObject
-import com.example.timetracker.timeline.MainActivity
-import com.example.timetracker.timeline.whenNotNull
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -84,7 +77,7 @@ class Statistics : AppCompatActivity() {
     fun refreashChart() {
         val groupedData = data.groupBy{ it.first.stringDate }
         val parsedData = groupedData.map{ Pair(it.value[0].first, TimeObject(it.value.sumBy{it.second.seconds}))}
-        val sortedData = parsedData.sortedBy { it.first.stringDate }
+        val sortedData = parsedData.sortedBy { it.first.stringDate }.takeLast(5)
         drawChart(sortedData)
         showList(sortedData)
     }
@@ -104,6 +97,7 @@ class Statistics : AppCompatActivity() {
         xaxis.granularity = 1f
         xaxis.setDrawLabels(true)
         xaxis.setDrawAxisLine(true)
+        xaxis.textSize = 12f
         xaxis.valueFormatter = IndexAxisValueFormatter(labels)
 
         val yAxisLeft = chart.axisLeft
@@ -120,6 +114,7 @@ class Statistics : AppCompatActivity() {
         val barDataSet = BarDataSet(values, " ")
         barDataSet.color = ContextCompat.getColor(this, R.color.colorPrimary)
         barDataSet.setDrawValues(true)
+        barDataSet.setValueTextSize(14f)
 
         val data = BarData(barDataSet)
         chart.data = data
