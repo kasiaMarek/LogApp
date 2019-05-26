@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener{
     }
 
     private fun initRecyclerView() {
-        task_list.sortByDescending{ DateObject(it.started).stringDate }
+        task_list.sortByDescending{ DateObject(it.started).stringDateWithTime }
         initAdapter()
     }
 
