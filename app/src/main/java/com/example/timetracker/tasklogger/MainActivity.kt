@@ -22,13 +22,14 @@ import java.util.ArrayList
 import android.view.Menu
 import android.view.MenuItem
 import com.example.timetracker.Storage
+import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.timeline.MainActivity
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var tasklogger_adapter: TaskLoggerAdapter
     private lateinit var layout_manager: RecyclerView.LayoutManager
-    private val task_list = ArrayList<Task>()
+    private val task_list = ArrayList<Issue>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                     // also delete previous entries from task_list
                     task_list.clear()
                     val body = response.body()
-                    body!!.issues.forEach { task_list.add(Task(it.key, it.id, it.fields.summary, it.fields.created ?: "","9:00", parseSeconds(it.fields.timespent ?: "0"),  "started")) }
+                    task_list.addAll(body!!.issues)
                     initRecyclerView()
                 } else {
                     Log.d("Log", "Wrong auth")

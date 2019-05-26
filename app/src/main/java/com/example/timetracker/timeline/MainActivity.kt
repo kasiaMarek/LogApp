@@ -18,6 +18,7 @@ import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.Tasks
 import com.example.timetracker.jiraservice.Worklogs
+import com.example.timetracker.model.DateObject
 import com.example.timetracker.stats.Statistics
 import com.example.timetracker.tasklogger.MainActivity
 import com.github.vipulasri.timelineview.TimelineView
@@ -137,8 +138,8 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
             val i = Intent(this, Statistics::class.java)
             startActivity(i)
         }else if ( id == android.R.id.home) {
-            this.finish();
-            return true;
+            this.finish()
+            return true
         }
 
         return super.onOptionsItemSelected(item)

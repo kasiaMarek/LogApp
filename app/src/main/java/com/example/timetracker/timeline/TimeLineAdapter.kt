@@ -18,6 +18,8 @@ import com.example.timetracker.R
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.Worklog
 import com.example.timetracker.jiraservice.WorklogTime
+import com.example.timetracker.model.DateObject
+import com.example.timetracker.model.TimeObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,32 +41,13 @@ class TimeLineAdapter(private val task_list: ArrayList<Task>, private var mAttri
     }
 
     override fun onBindViewHolder(holder: TimeLineViewHolder, position: Int) {
-
         val timeLineModel = task_list[position]
 
-        when {  //todo:  other states for task
-            timeLineModel.status == "done" -> {
-                holder.timeline.marker = VectorDrawableUtils.getDrawable(holder.itemView.context, R.drawable.ic_marker_inactive, mAttributes.markerColor)
-            }
-            timeLineModel.status == "started"-> {
-                holder.timeline.marker = VectorDrawableUtils.getDrawable(holder.itemView.context, R.drawable.ic_marker_active,  mAttributes.markerColor)
-            }
-            else -> {
-                holder.timeline.setMarker(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_marker), mAttributes.markerColor)
-            }
-        }
-
-        if (timeLineModel.date.isNotEmpty()) {
-            holder.task_date.visibility = View.VISIBLE
-            holder.task_date.text = DateTimeUtils.parseDateTime(timeLineModel.date, "yyyy-MM-dd HH:mm", "hh:mm a, dd-MMM-yyyy")
-        } else
-            holder.task_date.visibility = View.GONE
-
+        holder.timeline.marker = VectorDrawableUtils.getDrawable(holder.itemView.context, R.drawable.ic_marker_active,  mAttributes.markerColor)
+        holder.task_date.text = DateObject(timeLineModel.date).stringFullDate
         holder.task_message.text = timeLineModel.title
-        holder.task_time_spent.text = timeLineModel.time_spent
+        holder.task_time_spent.text = TimeObject(timeLineModel.time_spent).string
         holder.task_id.text = timeLineModel.task_id
-
-
     }
 
 

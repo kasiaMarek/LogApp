@@ -9,12 +9,14 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timetracker.model.Task
 import com.example.timetracker.R
+import com.example.timetracker.jiraservice.Issue
+import com.example.timetracker.model.TimeObject
 import com.example.timetracker.stoper.StopperActivity
 import kotlinx.android.synthetic.main.tasklogger_item.view.*
 
-class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Context) : RecyclerView.Adapter<TaskLoggerAdapter.TaskLoggerViewHolder>() {
+class TaskLoggerAdapter(private val task_list: ArrayList<Issue>, val context: Context) : RecyclerView.Adapter<TaskLoggerAdapter.TaskLoggerViewHolder>() {
 
-    var task_list_copy = ArrayList<Task>()
+    var task_list_copy = ArrayList<Issue>()
 
     init{
         task_list_copy.addAll(task_list)
@@ -33,9 +35,9 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Con
 
         val timeLineModel = task_list[position]
 
-        holder.task_title.text = timeLineModel.title
-        holder.task_time_spent.text = timeLineModel.time_spent
-        holder.task_id.text = timeLineModel.task_id
+        holder.task_title.text = timeLineModel.fields.summary
+        holder.task_time_spent.text = TimeObject(timeLineModel.fields.timespent).string
+        holder.task_id.text = timeLineModel.key
 
     }
 
@@ -62,8 +64,8 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Con
                     //itemView.timeline_item_time_spent.text
 
                     val intent = Intent(context, StopperActivity::class.java).apply {
-                        putExtra("task", clicked_task.title)
-                        putExtra("taskId", clicked_task.task_num_id)
+                        putExtra("task", clicked_task.fields.summary)
+                        putExtra("taskId", clicked_task.key)
                     }
                     startActivity(context, intent, null)
 
@@ -81,7 +83,7 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Con
         } else {
             text = text.toLowerCase()
             for (item in task_list_copy) {
-                if (item.title.toLowerCase().contains(text) || item.task_id.toLowerCase().contains(text)) {
+                if (item.fields.summary.toLowerCase().contains(text) || item.key.toLowerCase().contains(text)) {
                     task_list.add(item)
                 }
             }
