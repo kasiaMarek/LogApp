@@ -21,9 +21,14 @@ import com.example.timetracker.model.DateObject
 import com.example.timetracker.model.TimeObject
 import com.example.timetracker.utils.ErrorUtils
 import com.github.mikephil.charting.charts.Chart
+import com.github.mikephil.charting.data.Entry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.github.mikephil.charting.utils.ViewPortHandler
+import com.github.mikephil.charting.formatter.IValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+
 
 class Statistics : AppCompatActivity() {
     val data = ArrayList<Pair<DateObject, TimeObject>>()
@@ -121,7 +126,7 @@ class Statistics : AppCompatActivity() {
         val barDataSet = BarDataSet(values, " ")
         barDataSet.color = ContextCompat.getColor(this, R.color.colorPrimary)
         barDataSet.setDrawValues(true)
-        barDataSet.setValueTextSize(14f)
+        barDataSet.valueTextSize = 14f
 
         val data = BarData(barDataSet)
         chart.data = data
@@ -135,7 +140,7 @@ class Statistics : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-        if ( id == android.R.id.home) {
+        if (id == android.R.id.home) {
             this.finish()
             return true
         }

@@ -19,6 +19,11 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:layout_weight="0.6">
+        <TextView
+                android:text="@string/stat_chart_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView2" android:padding="8dp"
+                android:textAlignment="center"/>
         <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
@@ -27,7 +32,7 @@
         <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/list" android:layout_weight="0.4" android:paddingTop="16dp"/>
+                android:id="@+id/list" android:layout_weight="0.4" android:paddingTop="24dp"/>
     </LinearLayout>
 
 
