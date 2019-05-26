@@ -5,14 +5,10 @@ import android.content.res.Configuration
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Message
-import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
-import androidx.core.view.marginBottom
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.User
-import com.example.timetracker.test_main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         storage = Storage(this)
+        setSupportActionBar(login_toolbar)
         if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             layout.removeView(imageView)
         }
@@ -64,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
                         JiraServiceKeeper.jira.name = body!!.displayName
                         storage.writeCredentials(credentials)
                         Log.d("Log", "you're successfully logged in")
-                        val i = Intent(baseContext, MainActivity::class.java)
+                        val i = Intent(baseContext, com.example.timetracker.tasklogger.MainActivity::class.java)
                         startActivity(i)
                     } else {
                         setErrorMessage()
@@ -74,25 +71,17 @@ class LoginActivity : AppCompatActivity() {
         } else {
             setErrorMessage()
         }
-
-
     }
 
     fun onLoginClick(view: View) {
         val projectName = input_project.editText?.text.toString().trim()
-        val pattern = Regex("[a-zA-Z0-9]*")
-        if(projectName != "" && pattern.matches(projectName)) {
-            checkCredentials(
-                Credentials(
-                    input_login.editText?.text.toString(),
-                    input_token.editText?.text.toString(),
-                    projectName
-                )
+        checkCredentials(
+            Credentials(
+                input_login.editText?.text.toString(),
+                input_token.editText?.text.toString(),
+                projectName
             )
-        } else {
-            setErrorMessage(message = getString(R.string.invalid_project_error_msg))
-        }
-
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -5,17 +5,12 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timetracker.model.Task
 import com.example.timetracker.R
 import com.example.timetracker.stoper.StopperActivity
-
 import kotlinx.android.synthetic.main.tasklogger_item.view.*
-
-
-
 
 class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Context) : RecyclerView.Adapter<TaskLoggerAdapter.TaskLoggerViewHolder>() {
 
@@ -93,8 +88,4 @@ class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Con
         }
         notifyDataSetChanged()
     }
-
-
-
-
-    }
+}

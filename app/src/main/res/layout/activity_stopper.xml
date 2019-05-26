@@ -22,7 +22,7 @@
             />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:text="hours" android:layout_centerHorizontal="true" android:layout_below="@+id/hour"
-                     style="@style/StopperText"
+                      style="@style/StopperText"
             />
         </RelativeLayout>
         <RelativeLayout

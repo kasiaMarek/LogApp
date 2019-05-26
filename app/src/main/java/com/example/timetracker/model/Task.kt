@@ -8,5 +8,4 @@ class Task(
     var hour: String,
     var time_spent: String,
     var status:String
-
 )

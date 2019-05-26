@@ -33,6 +33,12 @@ class Storage (context: Context) {
     fun getCredentials() : Credentials {
         return Credentials(mail, password, project)
     }
+
+    fun deleteCredentials() {
+        this.password = ""
+        this.mail = ""
+        this.project = ""
+    }
 }
 
 data class Credentials(val login : String?, val token : String?, val projectName : String?) {

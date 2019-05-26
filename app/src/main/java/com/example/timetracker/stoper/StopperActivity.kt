@@ -19,7 +19,6 @@ import java.time.Duration
 import java.time.LocalDateTime
 import android.R.attr.data
 
-
 class StopperActivity : AppCompatActivity() {
     private val param = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
     lateinit var task: String

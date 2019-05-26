@@ -5,13 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timetracker.jiraservice.*
-import com.example.timetracker.test_main.MainActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-
 
 class MainActivity : AppCompatActivity() {
     lateinit var storage : Storage
@@ -49,8 +45,8 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val body = response.body()
                         JiraServiceKeeper.jira.name = body!!.displayName
-                        val i = Intent(baseContext, MainActivity::class.java)
-                        startActivity(i)
+                        val i = Intent(baseContext, com.example.timetracker.tasklogger.MainActivity::class.java)
+                        startActivityForResult(i, 123)
                     } else {
                         val i = Intent(baseContext, LoginActivity::class.java)
                         startActivity(i)
@@ -144,5 +140,13 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            val i = Intent(baseContext, LoginActivity::class.java)
+            startActivity(i)
+        }
     }
 }
