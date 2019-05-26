@@ -1,4 +1,5 @@
 package com.example.timetracker.timeline
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,13 +18,14 @@ import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.Tasks
 import com.example.timetracker.jiraservice.Worklogs
+import com.example.timetracker.stats.Statistics
+import com.example.timetracker.tasklogger.MainActivity
 import com.github.vipulasri.timelineview.TimelineView
 import kotlinx.android.synthetic.main.timeline_main_activity.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.ArrayList
-
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     // todo: main timeline activity
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
             lineDashWidth = Utils.dpToPx(4f, this),
             lineDashGap = Utils.dpToPx(2f, this)
         )
-
         setRefreshSwipe()
 
     }
@@ -133,8 +134,8 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         val id = item.getItemId()
 
         if (id == R.id.next_activity) {
-            Toast.makeText(this@MainActivity, "Opening stats", Toast.LENGTH_LONG).show()
-            return true
+            val i = Intent(this, Statistics::class.java)
+            startActivity(i)
         }else if ( id == android.R.id.home) {
             this.finish();
             return true;

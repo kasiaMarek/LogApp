@@ -1,17 +1,15 @@
 package com.example.timetracker
 
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.example.timetracker.jiraservice.JiraServiceKeeper
 import com.example.timetracker.jiraservice.User
-import android.content.res.Configuration
-import android.graphics.Color
-import com.example.timetracker.test_main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.tasklogger_main_activity.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,7 +46,6 @@ class LoginActivity : AppCompatActivity() {
                 credentials.projectName!!
             )
         ) {
-
             setErrorMessage(message = getString(R.string.waiting), color = Color.GRAY)
             val call = JiraServiceKeeper.jira.tryMyself()
             call.enqueue(object : Callback<User> {
@@ -85,7 +82,6 @@ class LoginActivity : AppCompatActivity() {
                 projectName
             )
         )
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

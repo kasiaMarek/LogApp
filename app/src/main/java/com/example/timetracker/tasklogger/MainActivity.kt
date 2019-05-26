@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
         })
-
-
      setRefreshSwipe()
     }
 
@@ -68,7 +66,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onRefresh() {
         getTastks()
-       // JiraServiceKeeper.jira.getTasks()
     }
 
     fun getTastks() {
@@ -92,7 +89,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
             }
 
         })
-
         tasklogger_swipe_refresh.setRefreshing(false);
         Log.d("Log", "Refreshed!")
     }

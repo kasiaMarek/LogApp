@@ -10,11 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.timetracker.model.Task
 import com.example.timetracker.R
 import com.example.timetracker.stoper.StopperActivity
-
 import kotlinx.android.synthetic.main.tasklogger_item.view.*
-
-
-
 
 class TaskLoggerAdapter(private val task_list: ArrayList<Task>, val context: Context) : RecyclerView.Adapter<TaskLoggerAdapter.TaskLoggerViewHolder>() {
 
