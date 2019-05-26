@@ -13,9 +13,6 @@
             android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".LoginActivity" android:label="@string/toolbar_login">
         </activity>
-        <activity android:name=".stats.Statistics">
-        </activity>
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -26,6 +23,8 @@
         <activity android:name=".timeline.MainActivity"  android:label="@string/toolbar_timeline"/>
         <activity android:name=".tasklogger.MainActivity" android:label="@string/toolbar_tasklogger"/>
         <activity android:name=".stoper.StopperActivity" android:label="@string/toolbar_stopwatch"/>
+        <activity android:name=".stats.Statistics" android:label="@string/toolbar_stats" />
+
     </application>
 
 </manifest>

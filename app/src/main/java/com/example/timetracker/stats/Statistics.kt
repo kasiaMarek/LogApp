@@ -1,5 +1,6 @@
 package com.example.timetracker.stats
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.timetracker.R
@@ -11,6 +12,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.components.YAxis
 import android.widget.Toast
+import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import com.example.timetracker.jiraservice.Issue
 import com.example.timetracker.jiraservice.JiraServiceKeeper
@@ -18,6 +20,7 @@ import com.example.timetracker.jiraservice.Tasks
 import com.example.timetracker.jiraservice.Worklogs
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.model.TimeObject
+import com.github.mikephil.charting.charts.Chart
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +31,13 @@ class Statistics : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistics)
+        setSupportActionBar(statisticsToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val p = chart.getPaint(Chart.PAINT_INFO);
+        p.textSize = 40f
+        p.color = Color.DKGRAY
+
         getData()
     }
 
@@ -74,7 +84,7 @@ class Statistics : AppCompatActivity() {
     fun refreashChart() {
         val groupedData = data.groupBy{ it.first.stringDate }
         val parsedData = groupedData.map{ Pair(it.value[0].first, TimeObject(it.value.sumBy{it.second.seconds}))}
-        val sortedData = parsedData.sortedBy { it.first.stringDate }
+        val sortedData = parsedData.sortedBy { it.first.stringDate }.takeLast(5)
         drawChart(sortedData)
         showList(sortedData)
     }
@@ -94,6 +104,7 @@ class Statistics : AppCompatActivity() {
         xaxis.granularity = 1f
         xaxis.setDrawLabels(true)
         xaxis.setDrawAxisLine(true)
+        xaxis.textSize = 12f
         xaxis.valueFormatter = IndexAxisValueFormatter(labels)
 
         val yAxisLeft = chart.axisLeft
@@ -110,6 +121,7 @@ class Statistics : AppCompatActivity() {
         val barDataSet = BarDataSet(values, " ")
         barDataSet.color = ContextCompat.getColor(this, R.color.colorPrimary)
         barDataSet.setDrawValues(true)
+        barDataSet.setValueTextSize(14f)
 
         val data = BarData(barDataSet)
         chart.data = data
@@ -118,5 +130,16 @@ class Statistics : AppCompatActivity() {
 
     fun showList(data : List<Pair<DateObject, TimeObject>>) {
         list.adapter = StatisticsAdapter(this, data)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if ( id == android.R.id.home) {
+            this.finish()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

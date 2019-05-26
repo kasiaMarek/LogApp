@@ -20,7 +20,7 @@ class StatisticsAdapter(context: Context, users: List<Pair<DateObject, TimeObjec
             convertView = LayoutInflater.from(context).inflate(R.layout.activity_statistics_item, parent, false)
         }
 
-        convertView!!.time.text = item.second.hours.toString()
+        convertView!!.time.text = item.second.string
         convertView!!.name.text = item.first.stringShortDate
 
         return convertView
