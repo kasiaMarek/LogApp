@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(i)
         }
     }
+
     private fun checkCredentials(credentials : Credentials) {
         if(
             JiraServiceKeeper.initJira(
