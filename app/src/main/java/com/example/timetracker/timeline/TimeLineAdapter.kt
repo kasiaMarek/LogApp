@@ -93,6 +93,7 @@ class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAt
                         val newTime = TimeObject(Pair(hourPicker.value, minutesPicker.value))
                         itemView.timeline_item_time_spent.text = newTime.string
                         task_list[pos].timeSpentSeconds = newTime.seconds.toString()
+                        notifyDataSetChanged()
                         updateWorklog(context, clickedDataItem.issueId, clickedDataItem.id, newTime)
                     }.setNegativeButton("Reject") { dialog, which -> }
 
