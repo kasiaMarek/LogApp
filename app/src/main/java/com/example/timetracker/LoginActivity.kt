@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.View
 import com.example.timetracker.jiraservice.JiraServiceKeeper
@@ -30,6 +31,9 @@ class LoginActivity : AppCompatActivity() {
                 savedInstanceState.getString("errorMessage").orEmpty(),
                 savedInstanceState.getInt("errorMessageColor")
             )
+            input_login.editText?.setText(savedInstanceState.getString("login"))
+            input_token.editText?.setText(savedInstanceState.getString("token"))
+            input_project.editText?.setText(savedInstanceState.getString("project"))
         }
     }
 
@@ -89,5 +93,9 @@ class LoginActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putString("errorMessage", errorMessage.text.toString())
         outState.putInt("errorMessageColor", errorMessage.currentTextColor)
+        outState.putString("login", input_login.editText?.text.toString())
+        outState.putString("project", input_project.editText?.text.toString())
+        outState.putString("token", input_token.editText?.text.toString())
     }
+
 }
