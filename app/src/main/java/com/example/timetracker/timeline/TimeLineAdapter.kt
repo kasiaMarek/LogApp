@@ -23,7 +23,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAttributes: TimelineAttributes) : RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
+class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAttributes: TimelineAttributes,val context: Context) : RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         return TimelineView.getTimeLineViewType(position, itemCount)
@@ -117,6 +117,8 @@ class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAt
 
         call.enqueue(object : Callback<Worklog> {
             override fun onFailure(call: Call<Worklog>, t: Throwable) {
+                var update_interface = context as UpdateInterface
+                update_interface.update_on_error()
                 Toast.makeText(context, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
             }
 
@@ -124,6 +126,8 @@ class TimeLineAdapter(private val task_list: ArrayList<Worklog>, private var mAt
                 if(response.isSuccessful) {
                     Toast.makeText(context, R.string.success_update, Toast.LENGTH_SHORT).show()
                 } else {
+                    var update_interface = context as UpdateInterface
+                    update_interface.update_on_error()
                     Toast.makeText(context, R.string.unexpected_error, Toast.LENGTH_SHORT).show()
                 }
             }

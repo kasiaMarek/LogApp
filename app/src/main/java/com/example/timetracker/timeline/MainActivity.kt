@@ -22,7 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.ArrayList
 
-class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, UpdateInterface {
     private lateinit var timeline_adapter: TimeLineAdapter
     private val task_list = ArrayList<Worklog>()
     private lateinit var layout_manager: LinearLayoutManager
@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         )
         setRefreshSwipe()
 
+    }
+
+    override fun update_on_error(){
+        onRefresh()
     }
 
     fun setRefreshSwipe(){
@@ -148,7 +152,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun initAdapter() {
         layout_manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        timeline_adapter = TimeLineAdapter(task_list, mAttributes)
+        timeline_adapter = TimeLineAdapter(task_list, mAttributes,this)
 
         timeline_recycler_view.layoutManager = layout_manager
         timeline_recycler_view.adapter = timeline_adapter
