@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         tasklogger_swipe_refresh.setOnRefreshListener(this)
         tasklogger_swipe_refresh.post {
             tasklogger_swipe_refresh.isRefreshing = true
-            getTastks()
+            getTasks()
         }
 
     }
