@@ -1,5 +1,6 @@
 package com.example.timetracker.stats
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.timetracker.R
@@ -19,6 +20,7 @@ import com.example.timetracker.jiraservice.Tasks
 import com.example.timetracker.jiraservice.Worklogs
 import com.example.timetracker.model.DateObject
 import com.example.timetracker.model.TimeObject
+import com.github.mikephil.charting.charts.Chart
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +33,11 @@ class Statistics : AppCompatActivity() {
         setContentView(R.layout.activity_statistics)
         setSupportActionBar(statisticsToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val p = chart.getPaint(Chart.PAINT_INFO);
+        p.textSize = 40f
+        p.color = Color.DKGRAY
+
         getData()
     }
 
