@@ -61,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
                         JiraServiceKeeper.jira.name = body!!.displayName
                         storage.writeCredentials(credentials)
                         Log.d("Log", "you're successfully logged in")
+                        setErrorMessage(message = "")
                         val i = Intent(baseContext, com.example.timetracker.tasklogger.MainActivity::class.java)
                         startActivity(i)
                     } else {
@@ -88,6 +89,5 @@ class LoginActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putString("errorMessage", errorMessage.text.toString())
         outState.putInt("errorMessageColor", errorMessage.currentTextColor)
-        Log.d("color", errorMessage.currentTextColor.toString())
     }
 }
