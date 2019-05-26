@@ -12,12 +12,6 @@ data class TimeObject(val seconds : Int) {
     val intMinutes : Int = ceil(minutes).toInt()
     val intHours : Int = floor(hours).toInt()
     val hoursAndMinutes : Pair<Int, Int> = Pair(intHours, ceil(intMinutes - intHours * 60.0).toInt())
-    val string =  "${hoursAndMinutes.first}h ${hoursAndMinutes.second}min"
-    val min_string = when {
-        intMinutes == 0 && intHours == 0 -> ""
-        intMinutes == 0 && intHours != 0 -> "${hoursAndMinutes.first}h"
-        intMinutes != 0 && intHours == 0 -> "${hoursAndMinutes.second}min"
-        else -> string
-    }
-
+    val string =  (if (hoursAndMinutes.first == 0)  "" else "${hoursAndMinutes.first}h") +
+            (if (hoursAndMinutes.second== 0)  "" else "${hoursAndMinutes.second}min")
 }
